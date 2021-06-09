@@ -1,0 +1,39 @@
+.card {
+    display: inline-flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    width: 10em;
+    height: 18em;
+    margin: 20px 20px 20px 20px;
+    border: 10px #FAFAFA solid;
+    border-radius: 10px;
+    box-shadow: #00000044 0px 0px 5px;
+    z-index: 0;
+}
+.card:hover{
+    filter: brightness(200%);
+}
+
+.card-red {
+    background-color: #DD0000;
+}
+
+.card-blue {
+    background-color: #0000DD;
+}
+
+.card-yellow {
+    background-color: #DDDD00;
+}
+
+.card-green {
+    background-color: #00AA00;
+}
+
+.card h1 {
+    text-align: center;
+    color: #FFFFFF;
+    text-shadow: #000000 0px 0px 2px;
+
+}
