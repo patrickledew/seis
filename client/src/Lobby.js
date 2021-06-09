@@ -12,7 +12,7 @@ class Lobby extends React.Component {
             error: null
         }
         console.log("connecting...")
-        this.io = io.connect('ws://localhost:4000', {
+        this.io = io.connect(`ws://localhost:${process.env.PORT || 4000}`, {
             forceNew: false,
             transports: ['websocket']
         });
