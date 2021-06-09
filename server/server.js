@@ -14,13 +14,15 @@ app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "/../client/build/index.html")) //Needed for the react app to work across different endpoints
 });
 
+console.log("Starting server on port " + process.env.PORT || 4000)
+
 const server = app.listen(process.env.PORT || 4000);
-const io = require("socket.io")(server, {
+const io = require("socket.io")(server, process.env.NODE_ENV === 'development' ? {
     cors: {
         origin: "http://localhost:3000", //Needed for webpack dev server running on different port
         methods: ["GET", "POST"]
     }
-});
+} : {});
 const lobbyManager = new LobbyManager(io);
 
 io.on("connection", (sock) => {

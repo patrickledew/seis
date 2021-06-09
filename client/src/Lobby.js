@@ -1,6 +1,5 @@
 import React from 'react';
 import io from 'socket.io-client';
-const development = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 class Lobby extends React.Component {
 
     constructor(props) {
@@ -12,8 +11,8 @@ class Lobby extends React.Component {
             myId: null,
             error: null
         }
-        console.log("connecting...")
-        this.io = io.connect("ws://localhost" + development ? ":4000" : "", {
+        console.log("Running in " + process.env.NODE_ENV);
+        this.io = io.connect("ws://localhost" + process.env.NODE_ENV === 'development' ? ":4000" : "", { //Should default to using same port as the express server if used in production. If in dev, use 4000
             forceNew: false,
             transports: ['websocket']
         });
@@ -56,7 +55,7 @@ class Lobby extends React.Component {
             myId: null,
             error: null
         });
-        this.io = io.connect('ws://localhost:4000', {
+        this.io = io.connect("ws://localhost" + process.env.NODE_ENV === 'development' ? ":4000" : "", {
             forceNew: false,
             transports: ['websocket']
         });
