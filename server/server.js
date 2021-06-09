@@ -8,26 +8,30 @@ const {Lobby, LobbyManager} = require('./lobby');
 const app = express();
 
 app.use(morgan("combined"));
-app.use(express.static(path.join(__dirname, "/../client/build")));
+app.use(express.static(path.join(__dirname, "/../client/build"))); //static files
 
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "/../client/build/index.html"))
-})
+    res.sendFile(path.join(__dirname, "/../client/build/index.html")) //Needed for the react app to work across different endpoints
+});
 
 const server = app.listen(process.env.PORT || 4000);
 const io = require("socket.io")(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "http://localhost:3000", //Needed for webpack dev server running on different port
         methods: ["GET", "POST"]
-    },
-    transports: ['websocket']
+    }
 });
 const lobbyManager = new LobbyManager(io);
 
 io.on("connection", (sock) => {
     sock.on('joinlobby', (lobbyId, userName) => {
         console.log("Attempting to join lobby. ID: " + lobbyId + ", Name: " + userName);
-        if (lobbyManager.lobbyExists(lobbyId)) {
+        if (lobbyId == null) {
+            lobbyId = lobbyManager.createLobby(null);
+            sock.emit('changelobby', lobbyId);
+            return;
+        }
+        else if (lobbyManager.lobbyExists(lobbyId)) {
             if (lobbyManager.isPrivate(lobbyId)) {
                 sock.emit('error', {type: 'private-lobby', msg: "Error connecting to lobby. This lobby is private."})
                 return;

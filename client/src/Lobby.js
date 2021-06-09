@@ -40,6 +40,11 @@ class Lobby extends React.Component {
                 this.setState({error: null})
             }, 10000);
         });
+        this.io.on('changelobby', newid => {
+            console.log(newid);
+            window.location = `/lobby/${newid}`;
+            this.reset();
+        })
     }
 
     reset() {
@@ -72,6 +77,9 @@ class Lobby extends React.Component {
     }
 
     componentDidMount() {
+        if (this.state.lobbyId == 'NEW') {
+            this.io.emit('joinlobby', null);
+        }
     }
 
     connect() {

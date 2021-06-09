@@ -72,7 +72,6 @@ class LobbyManager {
      */
     createLobby(id) {
         if (this.numLobbies() > Math.pow(36, LOBBY_ID_LENGTH)) return null; // Number of concurrent lobbies exceeded ):
-        if (id.length)
         if (id == null) {
             do {
                 id = randomString(LOBBY_ID_LENGTH);
@@ -80,7 +79,7 @@ class LobbyManager {
         }
         const lobby = new Lobby(id, this.io);
         this.lobbies.set(id.toUpperCase(), lobby);
-        return lobby;
+        return id.toUpperCase();
     }
 
     removeLobby(id) {
