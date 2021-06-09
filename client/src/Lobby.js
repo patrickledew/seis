@@ -1,5 +1,6 @@
 import React from 'react';
 import io from 'socket.io-client';
+const development = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 class Lobby extends React.Component {
 
     constructor(props) {
@@ -12,7 +13,7 @@ class Lobby extends React.Component {
             error: null
         }
         console.log("connecting...")
-        this.io = io.connect(`ws://localhost:${process.env.PORT || 4000}`, {
+        this.io = io.connect("ws://localhost" + development ? ":4000" : "", {
             forceNew: false,
             transports: ['websocket']
         });
