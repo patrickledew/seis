@@ -1,5 +1,12 @@
+
+.deck-margins {
+    padding-left: 20%;
+    padding-right: 20%;
+    margin-top: 10em;
+}
 .deck {
-    white-space: nowrap;
-    overflow-x: scroll;
-    max-width: 100%;
+    position: relative;
+    width: 100%;
+    margin: 0;
+    height: 25em;
 }

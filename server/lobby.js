@@ -1,3 +1,5 @@
+const Game = require("./game");
+
 const LOBBY_ID_LENGTH = 4;
 
 function randomString(length) {
@@ -16,7 +18,7 @@ class LobbyManager {
                 }
             })
             console.log("Active Lobbies: ", Array.from(this.lobbies.keys()));
-        }, 60000); //Every minute, remove dead lobbies
+        }, 10*60*1000); //Every 10 minutes, remove dead lobbies
     }
 
     numLobbies() {
@@ -151,6 +153,31 @@ class Lobby {
         }
     }
 
+    startGame() {
+        this.state.inProgress = true;
+        this.io.to(this.state.id).emit('gamestarting');
+        this.emitState();
+        this.sockets.forEach(s => {
+            s.join(this.state.id + "-game");
+        })
+        this.game = new Game(this, this.io, this.state.id + "-game", this.sockets);
+        this.game.start().finally(() => {
+            this.io.to(this.state.id).emit('gameending');
+            this.state.inProgress = false;
+            this.emitState();
+            this.sockets.forEach(s => {
+                s.leave(this.state.id + "-game");
+            })
+        })
+    }
+    /**
+     * 
+     * @param {Socket} to 
+     * @param {string} msg 
+     */
+    sendError(to, msg) {
+        to.emit('error', {msg: msg})
+    }
     //Set up listeners to socket messages associated with a userId
     //Since we call this function when we first add the user, the listeners for one socket will always know what the user id is for that socket. No need for a reverse map.
     listenTo(socket, userId) {
@@ -183,7 +210,7 @@ class Lobby {
                 }
                 this.emitState();
             } else {
-                socket.emit('error', {type: 'not-lobby-leader', msg: "Error: You aren't the lobby leader."})
+                this.sendError(socket, "Error: You aren't the lobby leader.");
             }
         });
         socket.on('kickplayer', id => {
@@ -191,7 +218,22 @@ class Lobby {
             if (this.getPlayer(userId).isLeader) {     
                 this.kickPlayer(id);
             } else {
-                socket.emit('error', {type: 'not-lobby-leader', msg: "Error: You aren't the lobby leader."})
+                this.sendError(socket, "Error: You aren't the lobby leader.");
+            }
+        });
+        socket.on('startgame', () => {
+            if (this.getPlayer(userId).isLeader) {
+                if (this.state.players.length <= this.state.maxPlayers) {
+                    if (this.state.players.length >= 2) {
+                        this.startGame();
+                    } else {
+                        this.sendError(socket, "Error: Not enough players. You can't play by yourself!");
+                    }
+                } else {
+                    this.sendError(socket, "Error: Too many players. Try increasing the max players.");
+                }
+            } else {
+                this.sendError(socket, "Error: You aren't the lobby leader.");
             }
         })
     }
@@ -200,8 +242,11 @@ class Lobby {
     kickAll() {
         this.state.players = [];
         this.sockets.forEach(s => {
+            s.emit('kick');
             s.disconnect();
         });
+        this.sockets.clear();
+        this.state.isPrivate = false;
     }
 }
 

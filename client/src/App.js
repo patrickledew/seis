@@ -1,15 +1,20 @@
 import GameContainer from './GameContainer';
 import Home from './Home';
 import Lobby from './Lobby';
-import {BrowserRouter, Route} from 'react-router-dom';
+import FourOhFour from './404';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Route exact path="/" component={Home}/>
-        <Route path='/lobby/:id' component={Lobby}/>
+        <Switch>
+          <Route exact path="/" component={Home}/>
+          <Route path='/lobby/:id' component={Lobby}/>
+          <Route path='/decktest' component={GameContainer}/>
+          <Route path='*' component={FourOhFour}/>
+        </Switch>
       </BrowserRouter>
     </div>
   );
