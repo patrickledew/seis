@@ -1,6 +1,7 @@
 import {Component} from 'react';
 import OpponentDeck from './OpponentDeck';
 import Deck from "./Deck";
+import CardPile from "./CardPile";
 import './GameUI.css';
 
 
@@ -32,6 +33,9 @@ class GameUI extends Component
                     {color: "yellow", value: "+2"},
                     {color: "green", value: "5"}
 
+                ],
+                cardPile: [
+                    {color: null, value: "W"}
                 ]
             }
         }
@@ -45,11 +49,13 @@ class GameUI extends Component
                     <OpponentDeck numCards={10} opponentName="abdullah"/>
                 </div>
             <div className="rightside">
-                <div className="upper"></div>
+                <div className="upper">
+                    <CardPile cards={this.state.gameState.cardPile}></CardPile>
+                </div>
                 <div className="lower">
                     <Deck cards={this.state.gameState.myDeck} playCard={(idx) => {
-                        this.state.gameState.myDeck.splice(idx, 1);
-                        this.setState({gameState: {myDeck: this.state.gameState.myDeck}})
+                        let theCard = this.state.gameState.myDeck.splice(idx, 1);
+                        this.setState({gameState: {myDeck: this.state.gameState.myDeck, cardPile: [...this.state.gameState.cardPile, ...theCard]}})
                     }}></Deck>
                 </div>
             </div>

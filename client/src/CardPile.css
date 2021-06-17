@@ -1,0 +1,17 @@
+.cardpile {
+    position: relative;
+    top: 5em;
+    left: calc(50% - 5em);
+    width: 10em;
+    height: 18em;
+    justify-self: center;
+}
+@keyframes slidein {
+    from {
+        transform:translateY(30em);
+    }
+}
+.cardpile .card.topcard {
+    z-index: 20;
+    animation: slidein 0.5s;
+}

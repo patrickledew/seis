@@ -13,12 +13,15 @@
     user-select: none;
     padding-left: 10px;
     padding-right: 10px;
-    cursor: pointer;
 }
 
 .inactive .card {
     filter:saturate(0.5);
     cursor: default !important;
+}
+
+.mydeck .card {
+    cursor: pointer;
 }
 
 .card.small {
@@ -53,12 +56,12 @@
 }
 
 .card.right {
-    transform: translate(4em, 1em);
+    transform: translate(6em, 1em);
     rotate: 2deg;
 }
 
 .bump .card.right {
-    transform: translate(5em, 1em);
+    transform: translate(6.5em, 1em);
 }
 
 .card.left {
