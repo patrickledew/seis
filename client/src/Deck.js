@@ -49,7 +49,7 @@ const Deck = (props) => {
                 if (cards.length > 6) {
                  cardOffset = `calc(${(i/(cards.length - 1)) * 100}% - 5em`;
                 } else { 
-                    cardOffset = `calc(50% - ${6*cards.length/2}em + ${i*6}em)`;
+                    cardOffset = `calc(50% - 2.5em - ${6*cards.length/2}em + ${i*6}em)`;
                 }
                 return <Card idx={i} color={card.color} value={card.value} cardStyle={(() => {
                     let style = {left: cardOffset};

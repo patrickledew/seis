@@ -1,10 +1,10 @@
 import {Component} from 'react';
 import OpponentDeck from './OpponentDeck';
 import Deck from "./Deck";
-import './GameContainer.css';
+import './GameUI.css';
 
 
-class GameContainer extends Component
+class GameUI extends Component
 {
     constructor(props) {
         super(props);
@@ -41,8 +41,8 @@ class GameContainer extends Component
         return <div className="game" id="game">
                 <div className="playerlist">
                     <OpponentDeck numCards={5} opponentName="jeff" highlight/>
-                    <OpponentDeck numCards={3} opponentName="jeff"/>
-                    <OpponentDeck numCards={10} opponentName="jeff"/>
+                    <OpponentDeck numCards={3} opponentName="what the dog doing"/>
+                    <OpponentDeck numCards={10} opponentName="abdullah"/>
                 </div>
             <div className="rightside">
                 <div className="upper"></div>
@@ -53,8 +53,13 @@ class GameContainer extends Component
                     }}></Deck>
                 </div>
             </div>
+                <div className="playerlist">
+                    <OpponentDeck numCards={5} opponentName="idiot"/>
+                    <OpponentDeck numCards={3} opponentName="haha"/>
+                    <OpponentDeck numCards={10} opponentName="dumb"/>
+                </div>
         </div>
     }
 }
 
-export default GameContainer;
+export default GameUI;
