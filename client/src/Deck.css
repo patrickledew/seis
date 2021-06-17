@@ -1,8 +1,21 @@
 
 .deck-margins {
+    padding-left: 5em;
+    padding-right: 5em;
+    padding-top:2em;
+}
+.mydeck {
     padding-left: 20%;
     padding-right: 20%;
-    margin-top: 10em;
+
+}
+.opponentdeck {
+    padding-left: 2em;
+}
+.opponentdeck .opponent-name{
+    font-size: 2em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
 }
 .deck {
     position: relative;

@@ -4,8 +4,31 @@
 }
 
 .game {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
     background-color: black;
+}
+
+.upper {
+    grid-row-start: 1;
+    grid-row-end: 3;
+    height: 100%;
+}
+
+.lower {
+    grid-row: -1;
+}
+
+.playerlist {
+    height: 100vh;
+    grid-column: 1;
+    overflow-y: scroll;
+}
+.rightside {
+    display: grid;
+    grid-template-rows: 2fr 1fr;
+    grid-column: 2;
 }

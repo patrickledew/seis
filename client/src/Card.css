@@ -9,17 +9,72 @@
     border: 0px solid rgba(255, 255, 255, 0.788);
     border-radius: 10px;
     box-shadow: #00000044 0px 0px 5px;
-    z-index: 0;
     transition: transform 0.15s ease-out;
-    backdrop-filter: brightness(150%) blur(10px);
     user-select: none;
     padding-left: 10px;
     padding-right: 10px;
+    cursor: pointer;
+}
+
+.highlight {
+    filter: brightness(1.3) drop-shadow(#ffffff 0px 0px 20px);
+}
+
+
+.inactive .card {
+    filter:saturate(0.5);
+    cursor: default !important;
+}
+
+.card.small {
+    width: 7em;
+    height: 12.6em;
+    border-radius: 7px;
+    padding-left: 7px;
+    padding-right: 7px;
+}
+.card.small h1 {
+    font-size: 2.8em !important;
+}
+
+.card.small h2 {
+    font-size: 1.05em !important;
+}
+
+.card.hidden {
+    background: linear-gradient(to top right, #767676, #a9a9a9);
+    rotate: 2deg;
+    cursor: default !important;
+    
 }
 
 .card.selected{
     box-shadow: #ffffff 0px 0px 10px 2px;
+    transform: translate(0em, -8em);
 }
+
+.inactive .card.selected {
+    box-shadow: none !important;
+}
+
+.card.right {
+    transform: translate(4em, 1em);
+    rotate: 2deg;
+}
+
+.bump .card.right {
+    transform: translate(5em, 1em);
+}
+
+.card.left {
+    transform: translate(-2em, 1em);
+    rotate: -2deg;
+}
+
+.bump .card.left {
+    transform: translate(-3em, 1em);
+}
+
 
 .card-red {
     background: linear-gradient(to top right, #c7201d, #e35d5b);
@@ -64,4 +119,19 @@
     align-self: flex-end;
     color: #FFFFFF;
 
+}
+
+@keyframes fly-away {
+    from {
+        transform: translate(0em, 0em);
+        opacity: 1;
+    }
+    to {
+        transform: translate(0em, -50em);
+        opacity: 0;
+    }
+}
+
+.card.fly-away {
+    animation: fly-away 0.5s ease-in;
 }

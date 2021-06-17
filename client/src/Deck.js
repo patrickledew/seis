@@ -1,36 +1,61 @@
 import { useRef, useEffect, useState } from "react";
 import Card from "./Card";
 import './Deck.css';
+
+
+
 const Deck = (props) => {
 
+    const [cards, updateCards] = useState(props.cards);
     const [selectedCard, setSelectedCard] = useState(null);
     const [shouldBump, setShouldBump] = useState(true);
+    const [cardSound, _] = useState(new Audio());
+    const [cardPlaySound, __] = useState(new Audio());
+
+    useEffect(() => {
+        cardSound.src = "/card3.mp3";
+        cardSound.load();
+        cardPlaySound.src = "/card2.mp3";
+        cardPlaySound.load();
+    }, [cardSound, cardPlaySound])
+
+    const cardMouseEnterFn = (cardIdx) => {
+        let copy = cardSound.cloneNode(true)
+        copy.mozPreservesPitch = false;
+        copy.playbackRate = Math.random() / 5 + 1;
+        copy.play();
+        setSelectedCard(cardIdx);
+        setShouldBump(true);
+        setTimeout(() => setShouldBump(false), 500);
+    }
+
+    const cardClickFn = (cardIdx) => {
+        let copy = cardPlaySound.cloneNode(true)
+        copy.mozPreservesPitch = false;
+        copy.playbackRate = Math.random() / 5 + 1;
+        copy.play();
+        if (!props.inactive) {
+            document.getElementById("card-"+cardIdx).classList.add("fly-away");
+            setTimeout(() => props.playCard(cardIdx), 500);
+        }
+    }
+
 
     return <div className="mydeck">
-    <div className="deck-margins"><div className="deck">
-            {props.cards.map((card, i) => {
+    <div className="deck-margins"><div className={`deck ${shouldBump ? "bump" : ""} ${props.inactive ? "inactive" : ""} ${props.highlight ? "highlight": ""}`}>
+            {cards.map((card, i) => {
                 //Calculate card position
-                let cardOffset = `calc(${(i/(props.cards.length - 1)) * 100}% - 5em`;
-                return <Card color={card.color} value={card.value} cardStyle={(() => {
-                    let style = {};
-                    if (i < selectedCard) {
-                        if(shouldBump) {
-                            style = {left: cardOffset, transform: `translate(-3em, 1em)`};
-                        } else {
-                            style = {left: cardOffset, transform: `translate(-2em, 1em)`};
-                        }
-                    } else if (i > selectedCard) {
-                        if(shouldBump) {
-                            style = {left: cardOffset, transform: `translate(5em, 1em)`};
-                        } else {
-                            style = {left: cardOffset, transform: `translate(4em, 1em)`};
-                        }
-                    } else {
-                        style = {left: cardOffset, transform: `translate(-10px, -10em)`};
-                    }
-                    setTimeout(() => setShouldBump(false), 300);
+                let cardOffset;
+                if (cards.length > 6) {
+                 cardOffset = `calc(${(i/(cards.length - 1)) * 100}% - 5em`;
+                } else { 
+                    cardOffset = `calc(50% - ${6*cards.length/2}em + ${i*6}em)`;
+                }
+                return <Card idx={i} color={card.color} value={card.value} cardStyle={(() => {
+                    let style = {left: cardOffset};
+                    
                     return style;
-                })()} onMouseEnter={() => {setSelectedCard(i); setShouldBump(true)}} selected={i == selectedCard}></Card>;
+                })()} position={i < selectedCard ? "left" : (i > selectedCard ? "right" : "")} onMouseEnter={cardMouseEnterFn.bind(this, i)} selected={i == selectedCard} onClick={cardClickFn.bind(this, i)}></Card>;
             }
             )}
         </div></div></div>
