@@ -7,6 +7,7 @@ import './Deck.css';
 const Deck = (props) => {
 
     const [cards, updateCards] = useState(props.cards);
+    const [canSelectCard, setCanSelectCard] = useState(true);
     const [selectedCard, setSelectedCard] = useState(null);
     const [shouldBump, setShouldBump] = useState(true);
     const [cardSound, _] = useState(new Audio());
@@ -24,19 +25,22 @@ const Deck = (props) => {
         copy.mozPreservesPitch = false;
         copy.playbackRate = Math.random() / 5 + 1;
         copy.play();
-        setSelectedCard(cardIdx);
+        if (canSelectCard) {
+            setSelectedCard(cardIdx);
+        }
         setShouldBump(true);
         setTimeout(() => setShouldBump(false), 500);
+        
     }
 
-    const cardClickFn = (cardIdx) => {
+    const cardClickFn = () => {
         let copy = cardPlaySound.cloneNode(true)
         copy.mozPreservesPitch = false;
         copy.playbackRate = Math.random() / 5 + 1;
         copy.play();
-        if (!props.inactive) {
-            document.getElementById("card-"+cardIdx).classList.add("fly-away");
-            setTimeout(() => props.playCard(cardIdx), 500);
+
+        if (!props.inactive && selectedCard != null) {
+            props.playCard(selectedCard);
         }
     }
 
@@ -49,13 +53,13 @@ const Deck = (props) => {
                 if (cards.length > 6) {
                  cardOffset = `calc(${(i/(cards.length - 1)) * 100}% - 5em`;
                 } else { 
-                    cardOffset = `calc(50% - ${6*cards.length/2}em + ${i*6}em)`;
+                    cardOffset = `calc(50% - 2.5em - ${6*cards.length/2}em + ${i*6}em)`;
                 }
                 return <Card idx={i} color={card.color} value={card.value} cardStyle={(() => {
                     let style = {left: cardOffset};
                     
                     return style;
-                })()} position={i < selectedCard ? "left" : (i > selectedCard ? "right" : "")} onMouseEnter={cardMouseEnterFn.bind(this, i)} selected={i == selectedCard} onClick={cardClickFn.bind(this, i)}></Card>;
+                })()} position={i < selectedCard ? "left" : (i > selectedCard ? "right" : "")} onMouseEnter={cardMouseEnterFn.bind(this, i)} selected={i == selectedCard} onClick={cardClickFn.bind(this)}></Card>;
             }
             )}
         </div></div></div>

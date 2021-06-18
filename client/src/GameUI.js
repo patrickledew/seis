@@ -1,10 +1,11 @@
 import {Component} from 'react';
 import OpponentDeck from './OpponentDeck';
 import Deck from "./Deck";
-import './GameContainer.css';
+import CardPile from "./CardPile";
+import './GameUI.css';
 
 
-class GameContainer extends Component
+class GameUI extends Component
 {
     constructor(props) {
         super(props);
@@ -32,6 +33,9 @@ class GameContainer extends Component
                     {color: "yellow", value: "+2"},
                     {color: "green", value: "5"}
 
+                ],
+                cardPile: [
+                    {color: null, value: "W"}
                 ]
             }
         }
@@ -41,20 +45,27 @@ class GameContainer extends Component
         return <div className="game" id="game">
                 <div className="playerlist">
                     <OpponentDeck numCards={5} opponentName="jeff" highlight/>
-                    <OpponentDeck numCards={3} opponentName="jeff"/>
-                    <OpponentDeck numCards={10} opponentName="jeff"/>
+                    <OpponentDeck numCards={3} opponentName="what the dog doing"/>
+                    <OpponentDeck numCards={10} opponentName="abdullah"/>
                 </div>
             <div className="rightside">
-                <div className="upper"></div>
+                <div className="upper">
+                    <CardPile cards={this.state.gameState.cardPile}></CardPile>
+                </div>
                 <div className="lower">
                     <Deck cards={this.state.gameState.myDeck} playCard={(idx) => {
-                        this.state.gameState.myDeck.splice(idx, 1);
-                        this.setState({gameState: {myDeck: this.state.gameState.myDeck}})
+                        let theCard = this.state.gameState.myDeck.splice(idx, 1);
+                        this.setState({gameState: {myDeck: this.state.gameState.myDeck, cardPile: [...this.state.gameState.cardPile, ...theCard]}})
                     }}></Deck>
                 </div>
             </div>
+                <div className="playerlist">
+                    <OpponentDeck numCards={5} opponentName="idiot"/>
+                    <OpponentDeck numCards={3} opponentName="haha"/>
+                    <OpponentDeck numCards={10} opponentName="dumb"/>
+                </div>
         </div>
     }
 }
 
-export default GameContainer;
+export default GameUI;

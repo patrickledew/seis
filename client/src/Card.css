@@ -13,17 +13,15 @@
     user-select: none;
     padding-left: 10px;
     padding-right: 10px;
-    cursor: pointer;
 }
-
-.highlight {
-    filter: brightness(1.3) drop-shadow(#ffffff 0px 0px 20px);
-}
-
 
 .inactive .card {
     filter:saturate(0.5);
     cursor: default !important;
+}
+
+.mydeck .card {
+    cursor: pointer;
 }
 
 .card.small {
@@ -58,12 +56,12 @@
 }
 
 .card.right {
-    transform: translate(4em, 1em);
+    transform: translate(6em, 1em);
     rotate: 2deg;
 }
 
 .bump .card.right {
-    transform: translate(5em, 1em);
+    transform: translate(6.5em, 1em);
 }
 
 .card.left {
@@ -123,7 +121,7 @@
 
 @keyframes fly-away {
     from {
-        transform: translate(0em, 0em);
+        transform: translate(0em, -8em);
         opacity: 1;
     }
     to {
