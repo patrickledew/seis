@@ -1,0 +1,14 @@
+.fullWidth {
+  width: 100vw;
+}
+.fullHeight {
+  height: 100vh;
+}
+.centerVertically {
+  display: flex;
+  align-items: center;
+}
+.centerHorizontally {
+  display: flex;
+  justify-content: center;
+}
