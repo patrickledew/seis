@@ -6,7 +6,6 @@ import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 import "./loginPage.scss";
 
-//TODO: Figure out how to over ride the input base focus color
 const LoginPage = () => {
   return (
     <Paper className="LoginPage fullWidth fullHeight centerVertically centerHorizontally backgroundGradient">
@@ -19,12 +18,12 @@ const LoginPage = () => {
           </Grid>
           <Grid item lg={12} className="padding10">
             <TextField
-              type="email"
               id="email-input"
               label="Email"
               variant="outlined"
               margin="dense"
               fullWidth
+              autoFocus
             />
           </Grid>
           <Grid item lg={12} className="padding10">
@@ -39,7 +38,7 @@ const LoginPage = () => {
           </Grid>
 
           <Grid item lg={12} className="padding10 centerHorizontally">
-            <Button size="large" variant="contained" color="primary">
+            <Button size="medium" variant="contained" color="primary">
               Login
             </Button>
           </Grid>
