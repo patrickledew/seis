@@ -12,3 +12,25 @@
   display: flex;
   justify-content: center;
 }
+.backgroundGradient {
+  background-image: url("../assets/loginGradient.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.padding35 {
+  padding: 35px;
+}
+.padding10 {
+  padding: 10px;
+}
+.marginBottom10 {
+  margin-bottom: 10px;
+}
+
+:focus {
+  border-color: white !important;
+}
+
+.MuiOutlinedInput-root {
+  border-color: red !important;
+}

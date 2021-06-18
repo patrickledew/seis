@@ -6,11 +6,13 @@ import LoginPage from "./LoginPage/LoginPage";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Theme from "./theme/Theme";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import "./App.css";
 
 function App() {
   return (
     <ThemeProvider theme={Theme}>
+      <CssBaseline />
       <div className="App">
         <BrowserRouter>
           <Switch>
