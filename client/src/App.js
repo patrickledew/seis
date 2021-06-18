@@ -12,7 +12,7 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="login" component={LoginPage} />
+          <Route path="/login" component={LoginPage} />
           <Route path="/lobby/:id" component={Lobby} />
           <Route path="/decktest" component={GameUI} />
           <Route path="*" component={FourOhFour} />
