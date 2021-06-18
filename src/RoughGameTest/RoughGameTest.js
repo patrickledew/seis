@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Game extends React.Component {
+class RoughGameTest extends React.Component {
     constructor(props) {
         super(props);
 
@@ -77,4 +77,4 @@ class Game extends React.Component {
     }
 }
 
-export default Game;
+export default RoughGameTest;

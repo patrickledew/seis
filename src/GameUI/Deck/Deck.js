@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
-import Card from "./Card";
-import './Deck.css';
+import Card from "../Card/Card";
+import './deck.css';
 
 
 
@@ -14,9 +14,9 @@ const Deck = (props) => {
     const [cardPlaySound, __] = useState(new Audio());
 
     useEffect(() => {
-        cardSound.src = "/card3.mp3";
+        cardSound.src = "/sounds/card3.mp3";
         cardSound.load();
-        cardPlaySound.src = "/card2.mp3";
+        cardPlaySound.src = "/sounds/card2.mp3";
         cardPlaySound.load();
     }, [cardSound, cardPlaySound])
 

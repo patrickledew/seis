@@ -1,12 +1,12 @@
-import GameUI from "./GameUI";
-import Home from "./Home";
-import Lobby from "./Lobby";
-import FourOhFour from "./404";
-import LoginPage from "./LoginPage/LoginPage";
+import GameUI from "../GameUI/GameUI";
+import Home from "../Home/Home";
+import Lobby from "../Lobby/Lobby";
+import FourOhFour from "../404/404";
+import LoginPage from "../LoginPage/LoginPage";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
-import Theme from "./theme/Theme";
-import "./App.css";
+import Theme from "../theme/Theme";
+import "./app.css";
 
 function App() {
   return (

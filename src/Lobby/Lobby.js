@@ -1,7 +1,10 @@
 import React from 'react';
-import Game from './Game';
+import Game from '../RoughGameTest/RoughGameTest';
 import {Redirect, Link} from 'react-router-dom';
 import io from 'socket.io-client';
+
+import './lobby.css';
+
 class Lobby extends React.Component {
 
     constructor(props) {

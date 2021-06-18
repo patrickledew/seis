@@ -1,4 +1,6 @@
-import './Card.css';
+import '../Card/card.css';
+import './hiddenCard.css';
+
 const HiddenCard = (props) => {
 
     return <div className={"card hidden" + (props.small ? " small" : "")} style={props.cardStyle} onMouseEnter={props.onMouseEnter}>

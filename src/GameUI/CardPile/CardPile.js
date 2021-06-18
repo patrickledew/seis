@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Card from "./Card";
-import "./CardPile.css";
+import Card from "../Card/Card";
+import "./cardPile.css";
 
 const CardPile = (props) => {
     let [cards, updateCards] = useState(props.cards);

@@ -1,0 +1,17 @@
+
+.deck-margins {
+    margin-left: 5em;
+    margin-right: 5em;
+}
+.mydeck {
+    padding-left: 20%;
+    padding-right: 20%;
+
+}
+
+.deck {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    height: 20em;
+}
