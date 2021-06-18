@@ -1,18 +1,11 @@
-import GameUI from "./GameUI";
-import Home from "./Home";
-import Lobby from "./Lobby";
-import FourOhFour from "./404";
-import LoginPage from "./LoginPage/LoginPage";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import "./App.css";
+import "./loginPage.scss";
 
-function App() {
+const LoginPage = () => {
   return (
     <div className="App">
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="login" component={LoginPage} />
           <Route path="/lobby/:id" component={Lobby} />
           <Route path="/decktest" component={GameUI} />
           <Route path="*" component={FourOhFour} />
@@ -20,6 +13,6 @@ function App() {
       </BrowserRouter>
     </div>
   );
-}
+};
 
-export default App;
+export default LoginPage;
