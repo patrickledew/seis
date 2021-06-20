@@ -65,7 +65,9 @@ export default (() => {
      * Disconnect the socket connection.
      */
     function disconnect() {
-        socket.disconnect();
+        if (socket) {
+            socket.disconnect();
+        }
         socket = null;
         userId = null;
         lobbyId = null;
@@ -85,9 +87,9 @@ export default (() => {
             userId = uid;
             handlers.onJoined(uid);
         });
-        socket.on('lobbyState', (lobbyState) => {
-            lobbyState = lobbyState;
-            handlers.onUpdate(lobbyState);
+        socket.on('lobbyState', (state) => {
+            lobbyState = state;
+            handlers.onUpdate(state);
         });
         socket.on('kick', () => {
             handlers.onError({msg: "You were kicked from the lobby."}); 
@@ -126,6 +128,11 @@ export default (() => {
     function setPrivateLobby(newvalue) {
         changeLobbyParam('isPrivate', newvalue);
     }
+
+    function _getSocket() {
+        return socket;
+    }
+
     
     return {
         checkIfLobbyExists: checkIfLobbyExists,
@@ -140,6 +147,6 @@ export default (() => {
         setMaxPlayers: setMaxPlayers,
         setPrivateLobby: setPrivateLobby,
         handlers: handlers,
-        _socket: socket,
+        _getSocket: _getSocket, //Have to use a getter here because it doesn't pass a reference if we don't (will just give null every time it's accessed)
     }
 })()

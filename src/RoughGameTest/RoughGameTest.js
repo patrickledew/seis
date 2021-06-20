@@ -3,15 +3,13 @@ import React from 'react';
 class RoughGameTest extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             gameState: null,
             error: null
         }
 
-        this.io = this.props.io;
+        this.io = props.io;
 
-        this.setupListeners();
     }
 
 
@@ -45,6 +43,10 @@ class RoughGameTest extends React.Component {
         //         e.style.backgroundColor = "white";
         //     }, 100)
         // })
+    }
+
+    componentDidMount() {
+        this.setupListeners();
     }
 
 

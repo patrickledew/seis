@@ -13,7 +13,7 @@ class Lobby extends React.Component {
 
         this.state = {
             username: this.loadUsernameFromStorage() || "User",
-            lobbyExists: undefined,
+            lobbyExists: null,
             lobbyId: props.match.params.id.toUpperCase(),
             gameStarted: false,
             connected: false,
@@ -64,7 +64,6 @@ class Lobby extends React.Component {
     }
 
     componentWillUnmount() {
-        lobbySocket.disconnect();
     }
 
     setupHandlers() {
@@ -87,11 +86,11 @@ class Lobby extends React.Component {
         }
 
         lobbySocket.handlers.onGameStart = () => {
-            this.setState({lobbyState: {inProgress: true}})
+            this.setState({lobbyState: {...this.state.lobbyState, inProgress: true}})
         }
 
         lobbySocket.handlers.onGameEnd = () => {
-            this.setState({lobbyState: {inProgress: false}})
+            this.setState({lobbyState: {...this.state.lobbyState, inProgress: false}})
         }
     }
 
@@ -120,65 +119,61 @@ class Lobby extends React.Component {
 
 
     render() {
-        
-        if (this.state.lobbyExists === undefined) {
+        if (this.state.lobbyExists === null) {
             return null;
         } else if (this.state.lobbyExists == false) {
             return <Redirect to="/" />; //Redirect if lobby doesn't exist
         } else if (this.state.lobbyExists == true) {
-            if (this.state.lobbyState != null) {
-                if (this.state.lobbyState.inProgress == true) {
-                    return <RoughGameTest io={null}></RoughGameTest>
-                } else {
-                    return (
-                    <div style={{margin: "10px 10px 10px 10px"}}>
-                        {this.state.displayError && <pre style={{color: 'red', backgroundColor: 'black'}}> {this.state.displayError.msg}</pre>}
-                        <h1>Lobby {this.state.lobbyId} {this.state.lobbyState && this.state.lobbyState.isPrivate ? "[Private]" : ""}</h1>
-                        <a href={`/lobby/${this.state.lobbyId}`}>(Link)</a>
-                        {this.state.connected && this.state.lobbyState ? <>
-                            <p>You are {this.state.username}</p>
-                            <br />
-                            <div style={{backgroundColor: "lightgrey", padding: "10px 10px 10px 10px"}}>
-                                <h2>Lobby Settings</h2>
-                                <p>Max Players: 
-                                    {this.state.lobbyState.maxPlayers}
-                                    {this.amLobbyLeader() && 
-                                    <span>
-                                        <button onClick={() => lobbySocket.setMaxPlayers(this.state.lobbyState.maxPlayers - 1)}>-</button>
-                                        / 
-                                        <button onClick={() => lobbySocket.setMaxPlayers(this.state.lobbyState.maxPlayers + 1)}>+</button>
-                                    </span>}
-                                    </p>
-                                <p>
-                                    Private Lobby? 
-                                    <input type="checkbox" disabled={!this.amLobbyLeader()} 
-                                        checked={this.state.lobbyState.isPrivate}
-                                        onChange={() => lobbySocket.setPrivateLobby(!this.state.lobbyState.isPrivate)}>
-                                    </input>
+            if (this.state.lobbyState && this.state.lobbyState.inProgress == true) { //If a game has started, use the game ui
+                return <div><RoughGameTest io={lobbySocket._getSocket()}></RoughGameTest></div>
+            } else { //Otherwise use lobby ui
+                if (this.state.connected && this.state.lobbyState != null) {
+                return <div style={{margin: "10px 10px 10px 10px"}}>
+                    {this.state.displayError && <pre style={{color: 'red', backgroundColor: 'black'}}> {this.state.displayError.msg}</pre>}
+                    <h1>Lobby {this.state.lobbyId} {this.state.lobbyState && this.state.lobbyState.isPrivate ? "[Private]" : ""}</h1>
+                    <a href={`/lobby/${this.state.lobbyId}`}>(Link)</a>
+                        <p>You are {this.state.username}</p>
+                        <br />
+                        <div style={{backgroundColor: "lightgrey", padding: "10px 10px 10px 10px"}}>
+                            <h2>Lobby Settings</h2>
+                            <p>Max Players: 
+                                {this.state.lobbyState.maxPlayers}
+                                {this.amLobbyLeader() && 
+                                <span>
+                                    <button onClick={() => lobbySocket.setMaxPlayers(this.state.lobbyState.maxPlayers - 1)}>-</button>
+                                    / 
+                                    <button onClick={() => lobbySocket.setMaxPlayers(this.state.lobbyState.maxPlayers + 1)}>+</button>
+                                </span>}
                                 </p>
-                                <p><button disabled={!this.amLobbyLeader()} onClick={() => lobbySocket.startGame()}>Start Game</button></p>
-                            </div>
-                            <h2>Player List:</h2>
-                            <ul>
-                                {this.state.lobbyState.players.map((player) => 
-                                <li>
-                                    {player.name + (player.isLeader ? " [LEADER]" : "")} 
-                                    {this.amLobbyLeader() && !player.isLeader &&
-                                    <button onClick={() => {if (window.confirm("U sure bro?")) {
-                                        lobbySocket.kickPlayer(player.id);
-                                    }}}>Kick</button>}
-                                </li>
-                                )} 
-                            </ul>
-                            
-                        </> : 
-                        <div>
-                            <p>Username: <input id="username" placeholder={this.state.name}></input></p>
-                            <button onClick={() => this.joinLobby()}>Join</button>
-                        </div>}
-                        
-                    </div>
-                    )
+                            <p>
+                                Private Lobby? 
+                                <input type="checkbox" disabled={!this.amLobbyLeader()} 
+                                    checked={this.state.lobbyState.isPrivate}
+                                    onChange={() => lobbySocket.setPrivateLobby(!this.state.lobbyState.isPrivate)}>
+                                </input>
+                            </p>
+                            <p><button disabled={!this.amLobbyLeader()} onClick={() => lobbySocket.startGame()}>Start Game</button></p>
+                        </div>
+                        <h2>Player List:</h2>
+                        <ul>
+                            {this.state.lobbyState.players.map((player) => 
+                            <li>
+                                {player.name + (player.isLeader ? " [LEADER]" : "")} 
+                                {this.amLobbyLeader() && !player.isLeader &&
+                                <button onClick={() => {if (window.confirm("U sure bro?")) {
+                                    lobbySocket.kickPlayer(player.id);
+                                }}}>Kick</button>}
+                            </li>
+                            )} 
+                        </ul>                    
+                </div>
+                } else { //If not connected to the lobby yet
+                    return <div style={{margin: "10px"}}>
+                    <h1>Lobby {this.state.lobbyId} </h1>
+                    <a href={`/lobby/${this.state.lobbyId}`}>(Link)</a>
+                    <p>Username: <input id="username" placeholder={this.state.name}></input></p>
+                    <button onClick={() => this.joinLobby()}>Join</button>
+                </div>
                 }
             }
         }
