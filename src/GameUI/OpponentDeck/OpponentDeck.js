@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
-import HiddenCard from "./HiddenCard";
-import './Deck.css';
+import HiddenCard from "../HiddenCard/HiddenCard";
+import '../Deck/deck.css';
+import './opponentDeck.css';
 const OpponentDeck = (props) => {
     return <div className="opponentdeck">
             <h2 className="opponent-name">{props.opponentName} - {props.numCards} cards</h2>

@@ -1,17 +1,15 @@
 import React from 'react';
 
-class Game extends React.Component {
+class RoughGameTest extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             gameState: null,
             error: null
         }
 
-        this.io = this.props.io;
+        this.io = props.io;
 
-        this.setupListeners();
     }
 
 
@@ -47,6 +45,10 @@ class Game extends React.Component {
         // })
     }
 
+    componentDidMount() {
+        this.setupListeners();
+    }
+
 
     render() {
         if (this.state.gameState != null) {
@@ -77,4 +79,4 @@ class Game extends React.Component {
     }
 }
 
-export default Game;
+export default RoughGameTest;

@@ -1,0 +1,6 @@
+.card.hidden {
+    background: linear-gradient(to top right, #767676, #a9a9a9);
+    rotate: 2deg;
+    cursor: default !important;
+    
+}

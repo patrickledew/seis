@@ -1,4 +1,4 @@
-import './Card.css';
+import './card.css';
 const Card = (props) => {
     return <div id={props.idx !== undefined ? `card-${props.idx}`: null} className={"card " + (props.color == 'red' ? "card-red" :
                 props.color == 'blue' ? "card-blue" :

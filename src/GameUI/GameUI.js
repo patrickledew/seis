@@ -1,8 +1,8 @@
 import {Component} from 'react';
-import OpponentDeck from './OpponentDeck';
-import Deck from "./Deck";
-import CardPile from "./CardPile";
-import './GameUI.css';
+import OpponentDeck from './OpponentDeck/OpponentDeck';
+import Deck from "./Deck/Deck";
+import CardPile from "./CardPile/CardPile";
+import './gameUI.css';
 
 
 class GameUI extends Component
