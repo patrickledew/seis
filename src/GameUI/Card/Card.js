@@ -11,12 +11,12 @@ const Card = (props) => {
         (props.color === "red"
           ? "card-red"
           : props.color === "blue"
-            ? "card-blue"
-            : props.color === "green"
-              ? "card-green"
-              : props.color === "yellow"
-                ? "card-yellow"
-                : "card-wildcard") +
+          ? "card-blue"
+          : props.color === "green"
+          ? "card-green"
+          : props.color === "yellow"
+          ? "card-yellow"
+          : "card-wildcard") +
         " " +
         (props.selected ? "selected" : "") +
         " " +
