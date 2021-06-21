@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import Card from "../Card/Card";
 import "./cardPile.css";
 
 const CardPile = (props) => {
-  const [cards, updateCards] = useState(props.cards);
+
   // Seeded random number generator, credit: https://www.timemox.com/en/tricks/generate-random-number-using-seed
   function rand(min, max, seed) {
     min = min || 0;
@@ -34,12 +35,17 @@ const CardPile = (props) => {
             cardStyle={{
               transform: `rotateZ(${cardRotation}) translateY(${i * 2}px)`,
             }}
-            topCard={i == props.cards.length - 1}
+            topCard={i === props.cards.length - 1}
+            key={i}
           />
         );
       })}
     </div>
   );
 };
+
+CardPile.propTypes = {
+  cards: PropTypes.arrayOf(PropTypes.object)
+}
 
 export default CardPile;

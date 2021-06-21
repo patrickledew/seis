@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import React from "react";
 import HiddenCard from "../HiddenCard/HiddenCard";
 import "../Deck/deck.css";
 import "./opponentDeck.css";

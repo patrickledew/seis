@@ -1,3 +1,6 @@
+import React from "react";
+import PropTypes from "prop-types";
+
 import "./card.css";
 const Card = (props) => {
   return (
@@ -31,5 +34,17 @@ const Card = (props) => {
     </div>
   );
 };
+
+Card.propTypes = {
+  idx: PropTypes.number,
+  color: PropTypes.string,
+  value: PropTypes.string,
+  selected: PropTypes.bool,
+  topCard: PropTypes.bool,
+  cardStyle: PropTypes.object,
+  onMouseEnter: PropTypes.func,
+  onClick: PropTypes.func,
+
+}
 
 export default Card;

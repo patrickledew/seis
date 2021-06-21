@@ -16,7 +16,7 @@ const Home = (props) => {
               .then((res) => {
                 if (!res.ok) throw new Error(res.statusText);
                 res.json().then((exists) => {
-                  if (exists == true) {
+                  if (exists) {
                     window.location.href = `/lobby/${id}`;
                   } else {
                     document.getElementById("join-error-msg").innerText =

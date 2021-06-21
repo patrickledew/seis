@@ -1,10 +1,10 @@
-import { Component } from "react";
+import React from "react";
 import OpponentDeck from "./OpponentDeck/OpponentDeck";
 import Deck from "./Deck/Deck";
 import CardPile from "./CardPile/CardPile";
 import "./gameUI.css";
 
-class GameUI extends Component {
+class GameUI extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

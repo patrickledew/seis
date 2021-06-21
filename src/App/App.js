@@ -1,3 +1,4 @@
+import React from "react";
 import GameUI from "../GameUI/GameUI";
 import Home from "../Home/Home";
 import Lobby from "../Lobby/Lobby";
