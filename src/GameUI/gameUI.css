@@ -1,39 +1,38 @@
-
 .b {
-    border: 1px solid black;
+  border: 1px solid black;
 }
 
 .game {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(24, 24, 24);
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(24, 24, 24);
+  justify-content: space-between;
 }
 
 .upper {
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    background-color: transparent;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  background-color: transparent;
 }
 
 .lower {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .playerlist {
-    height: 100vh;
-    overflow-y: auto;
-    flex-grow: 1;
-    background: rgb(48, 48, 48);
-    box-shadow: black 0px 0px 2px 0px;
-    z-index: 20;
-    flex-basis: 10%;
+  height: 100vh;
+  overflow-y: auto;
+  flex-grow: 1;
+  background: rgb(48, 48, 48);
+  box-shadow: black 0px 0px 2px 0px;
+  z-index: 20;
+  flex-basis: 10%;
 }
 .rightside {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 2;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 2;
 }
