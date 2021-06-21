@@ -128,23 +128,26 @@ export default (() => {
     changeLobbyParam("isPrivate", newvalue);
   }
 
-  function _getSocket() {
-    return socket;
-  }
-
   return {
     checkIfLobbyExists: checkIfLobbyExists,
     connect: connect,
     disconnect: disconnect,
     listen: listen,
     joinLobby: joinLobby,
-    lobbyState: lobbyState,
     startGame: startGame,
     kickPlayer: kickPlayer,
     changeLobbyParam: changeLobbyParam,
     setMaxPlayers: setMaxPlayers,
     setPrivateLobby: setPrivateLobby,
     handlers: handlers,
-    _getSocket: _getSocket, // Have to use a getter here because it doesn't pass a reference if we don't (will just give null every time it's accessed)
+    getLobbyState: () => {
+      return lobbyState;
+    },
+    getUserId: () => {
+      return userId;
+    },
+    _getSocket: () => {
+      return socket;
+    }, // Have to use a getter here because it doesn't pass a reference if we don't (will just give null every time it's accessed)
   };
 })();

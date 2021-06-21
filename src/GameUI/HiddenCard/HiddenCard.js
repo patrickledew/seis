@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import "../Card/card.css";
 import "./hiddenCard.css";
 
@@ -14,6 +15,12 @@ const HiddenCard = (props) => {
       <h2 className="last">?</h2>
     </div>
   );
+};
+
+HiddenCard.propTypes = {
+  small: PropTypes.bool,
+  cardStyle: PropTypes.object,
+  onMouseEnter: PropTypes.func,
 };
 
 export default HiddenCard;

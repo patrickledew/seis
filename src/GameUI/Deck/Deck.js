@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import Card from "../Card/Card";
 import "./deck.css";
 
 const Deck = (props) => {
-  const [cards, updateCards] = useState(props.cards);
-  const [canSelectCard, setCanSelectCard] = useState(true);
   const [selectedCard, setSelectedCard] = useState(null);
   const [shouldBump, setShouldBump] = useState(true);
-  const [cardSound, _] = useState(new Audio());
-  const [cardPlaySound, __] = useState(new Audio());
+  const [cardSound] = useState(new Audio());
+  const [cardPlaySound] = useState(new Audio());
 
   useEffect(() => {
     cardSound.src = "/sounds/card3.mp3";
@@ -22,9 +21,7 @@ const Deck = (props) => {
     copy.mozPreservesPitch = false;
     copy.playbackRate = Math.random() / 5 + 1;
     copy.play();
-    if (canSelectCard) {
-      setSelectedCard(cardIdx);
-    }
+    setSelectedCard(cardIdx);
     setShouldBump(true);
     setTimeout(() => setShouldBump(false), 500);
   };
@@ -48,15 +45,17 @@ const Deck = (props) => {
             props.inactive ? "inactive" : ""
           } ${props.highlight ? "highlight" : ""}`}
         >
-          {cards.map((card, i) => {
+          {props.cards.map((card, i) => {
             // Calculate card position
             let cardOffset;
-            if (cards.length > 6) {
-              cardOffset = `calc(${(i / (cards.length - 1)) * 100}% - 5em`;
+            if (props.cards.length > 6) {
+              cardOffset = `calc(${
+                (i / (props.cards.length - 1)) * 100
+              }% - 5em`;
             } else {
-              cardOffset = `calc(50% - 2.5em - ${(6 * cards.length) / 2}em + ${
-                i * 6
-              }em)`;
+              cardOffset = `calc(50% - 2.5em - ${
+                (6 * props.cards.length) / 2
+              }em + ${i * 6}em)`;
             }
             return (
               <Card
@@ -72,8 +71,9 @@ const Deck = (props) => {
                   i < selectedCard ? "left" : i > selectedCard ? "right" : ""
                 }
                 onMouseEnter={cardMouseEnterFn.bind(this, i)}
-                selected={i == selectedCard}
+                selected={i === selectedCard}
                 onClick={cardClickFn.bind(this)}
+                key={i}
               ></Card>
             );
           })}
@@ -81,6 +81,13 @@ const Deck = (props) => {
       </div>
     </div>
   );
+};
+
+Deck.propTypes = {
+  cards: PropTypes.arrayOf(PropTypes.object),
+  inactive: PropTypes.bool,
+  highlight: PropTypes.bool,
+  playCard: PropTypes.func,
 };
 
 export default Deck;

@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+
 import RoughGameTest from "../RoughGameTest/RoughGameTest";
 import { Redirect } from "react-router-dom";
 
@@ -7,6 +9,14 @@ import lobbySocket from "../services/Lobby/lobbySocket";
 import "./lobby.css";
 
 class Lobby extends React.Component {
+  static propTypes = {
+    match: PropTypes.shape({
+      params: PropTypes.shape({
+        id: PropTypes.string, // The lobby id, passed from react-router's Route component
+      }),
+    }),
+  };
+
   constructor(props) {
     super(props);
 
@@ -36,7 +46,7 @@ class Lobby extends React.Component {
 
   getPlayerById(id) {
     if (this.state.lobbyState && this.state.lobbyState.players) {
-      const player = this.state.lobbyState.players.find((v) => v.id == id);
+      const player = this.state.lobbyState.players.find((v) => v.id === id);
       return typeof player !== "undefined" ? player : null;
     } else {
       return null;
@@ -107,7 +117,7 @@ class Lobby extends React.Component {
   joinLobby() {
     const inputUsername = document.getElementById("username").value;
 
-    if (inputUsername != this.state.username) {
+    if (inputUsername !== this.state.username) {
       this.saveUsernameToStorage(inputUsername);
       this.setState({ username: inputUsername });
     }
@@ -122,10 +132,10 @@ class Lobby extends React.Component {
   render() {
     if (this.state.lobbyExists === null) {
       return null;
-    } else if (this.state.lobbyExists == false) {
+    } else if (this.state.lobbyExists === false) {
       return <Redirect to="/" />; // Redirect if lobby doesn't exist
-    } else if (this.state.lobbyExists == true) {
-      if (this.state.lobbyState && this.state.lobbyState.inProgress == true) {
+    } else if (this.state.lobbyExists === true) {
+      if (this.state.lobbyState && this.state.lobbyState.inProgress === true) {
         // If a game has started, use the game ui
         return (
           <div>
@@ -210,8 +220,8 @@ class Lobby extends React.Component {
               </div>
               <h2>Player List:</h2>
               <ul>
-                {this.state.lobbyState.players.map((player) => (
-                  <li>
+                {this.state.lobbyState.players.map((player, i) => (
+                  <li key={i}>
                     {player.name + (player.isLeader ? " [LEADER]" : "")}
                     {this.amLobbyLeader() && !player.isLeader && (
                       <button

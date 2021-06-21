@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import HiddenCard from "../HiddenCard/HiddenCard";
 import "../Deck/deck.css";
 import "./opponentDeck.css";
@@ -16,12 +17,24 @@ const OpponentDeck = (props) => {
               props.numCards <= 8
                 ? `calc(${i * 3}em - 5em`
                 : `calc(${(i / (props.numCards - 1)) * 100}% - 5em`;
-            return <HiddenCard cardStyle={{ left: cardOffset }} small={true} />;
+            return (
+              <HiddenCard
+                cardStyle={{ left: cardOffset }}
+                small={true}
+                key={i}
+              />
+            );
           })}
         </div>
       </div>
     </div>
   );
+};
+
+OpponentDeck.propTypes = {
+  opponentName: PropTypes.string,
+  numCards: PropTypes.number,
+  highlight: PropTypes.bool,
 };
 
 export default OpponentDeck;

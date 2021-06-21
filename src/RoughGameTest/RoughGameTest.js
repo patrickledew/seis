@@ -1,6 +1,11 @@
 import React from "react";
-
+import PropTypes from "prop-types";
+import { Socket } from "socket.io-client";
 class RoughGameTest extends React.Component {
+  static propTypes = {
+    io: PropTypes.instanceOf(Socket),
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -61,10 +66,10 @@ class RoughGameTest extends React.Component {
             <h2>My Deck</h2>
             <p>{this.state.gameState.my.hand.numCards} cards</p>
             <ul>
-              {this.state.gameState.my.hand.cards.map((card) => {
+              {this.state.gameState.my.hand.cards.map((card, i) => {
                 return (
-                  <li>
-                    {card.color != "any" ? card.color + " " : ""}
+                  <li key={i}>
+                    {card.color !== "any" ? card.color + " " : ""}
                     {card.symbol}
                   </li>
                 );
@@ -75,7 +80,7 @@ class RoughGameTest extends React.Component {
           <ul>
             {this.state.gameState.players.map((p) => {
               return (
-                <li id={p.id + "-deck"}>
+                <li id={p.id + "-deck"} key={p.id}>
                   {p.name}: {p.hand.numCards}cards
                 </li>
               );

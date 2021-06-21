@@ -4,7 +4,6 @@ import Card from "../Card/Card";
 import "./cardPile.css";
 
 const CardPile = (props) => {
-
   // Seeded random number generator, credit: https://www.timemox.com/en/tricks/generate-random-number-using-seed
   function rand(min, max, seed) {
     min = min || 0;
@@ -45,7 +44,7 @@ const CardPile = (props) => {
 };
 
 CardPile.propTypes = {
-  cards: PropTypes.arrayOf(PropTypes.object)
-}
+  cards: PropTypes.arrayOf(PropTypes.object),
+};
 
 export default CardPile;

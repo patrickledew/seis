@@ -8,15 +8,15 @@ const Card = (props) => {
       id={props.idx !== undefined ? `card-${props.idx}` : null}
       className={
         "card " +
-        (props.color == "red"
+        (props.color === "red"
           ? "card-red"
-          : props.color == "blue"
-          ? "card-blue"
-          : props.color == "green"
-          ? "card-green"
-          : props.color == "yellow"
-          ? "card-yellow"
-          : "card-wildcard") +
+          : props.color === "blue"
+            ? "card-blue"
+            : props.color === "green"
+              ? "card-green"
+              : props.color === "yellow"
+                ? "card-yellow"
+                : "card-wildcard") +
         " " +
         (props.selected ? "selected" : "") +
         " " +
@@ -41,10 +41,10 @@ Card.propTypes = {
   value: PropTypes.string,
   selected: PropTypes.bool,
   topCard: PropTypes.bool,
+  position: PropTypes.oneOf(["left", "right", ""]),
   cardStyle: PropTypes.object,
   onMouseEnter: PropTypes.func,
   onClick: PropTypes.func,
-
-}
+};
 
 export default Card;
