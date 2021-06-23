@@ -9,6 +9,8 @@ import LobbyJoinMenu from "./LobbyJoinMenu/LobbyJoinMenu";
 import LobbyNotFound from "./LobbyNotFound/LobbyNotFound";
 import LobbyMain from "./LobbyMain/LobbyMain";
 
+import GameUI from "../GameUI/GameUI";
+
 import lobbyService from "../services/lobbyService";
 import "./lobby.css";
 
@@ -149,19 +151,20 @@ class Lobby extends React.Component {
             </Alert>
           </Fade>
         </Box>
-        {this.state.lobbyExists === false ? (
+        {!this.state.lobbyExists ? (
           <LobbyNotFound
             lobbyId={this.state.lobbyId}
             showError={this.showError.bind(this)}
           />
-        ) : this.state.lobbyExists === true && !this.state.joined ? (
+        ) : !this.state.joined ? (
           <LobbyJoinMenu
             lobbyId={this.state.lobbyId}
             showError={this.showError.bind(this)}
             joinLobby={this.joinLobby.bind(this)}
           />
+        ) : this.state.lobbyState && this.state.lobbyState.inProgress ? (
+          <GameUI></GameUI>
         ) : (
-          this.state.lobbyExists === true &&
           this.state.joined &&
           this.state.lobbyState && (
             <LobbyMain

@@ -123,25 +123,30 @@ export default (() => {
       }
       lobbyId = id;
       socket.emit("joinlobby", lobbyId, username);
+
       const timeout = setTimeout(() => {
         handlers.onError("Timed out.");
         reject(new Error("Timed out."));
       }, 2000);
 
-      // Listen to an error response
-      socket.once("error", (e) => {
+      function joinErrorListener(e) {
         clearTimeout(timeout);
-        handlers.onError(e.msg);
+        socket.off("connect-success", joinSuccessListener);
         reject(new Error(e.msg));
-      });
+      }
 
-      // Listen to a successful response
-      socket.once("connect-success", (uid) => {
+      function joinSuccessListener(uid) {
         clearTimeout(timeout);
-        socket.off("error"); // Don't keep using the one-time listener above
+        socket.off("error", joinErrorListener);
         userId = uid;
         resolve(uid);
-      });
+      }
+
+      // Listen to an error response
+      socket.once("error", joinErrorListener);
+
+      // Listen to a successful response
+      socket.once("connect-success", joinSuccessListener);
 
       startListeners();
     });
