@@ -1,6 +1,12 @@
 import React, { useEffect, useRef } from "react";
-import { Paper, Grid, TextField, Typography, Button } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import {
+  Paper,
+  Grid,
+  TextField,
+  Typography,
+  Button,
+  Link,
+} from "@material-ui/core";
 import LinkIcon from "@material-ui/icons/Link";
 import PropTypes from "prop-types";
 
@@ -10,14 +16,13 @@ const LobbyJoinMenu = (props) => {
   }
 
   function saveUsernameToStorage(name) {
-    console.log("hi");
     localStorage.setItem("seis:username", name);
   }
 
-  function setUsernameAndJoin() {
+  function saveUsernameAndJoin() {
     saveUsernameToStorage(usernameInputRef.current.value);
-    props.setUsername(usernameInputRef.current.value);
-    props.joinLobby();
+
+    props.joinLobby(usernameInputRef.current.value);
   }
 
   const usernameInputRef = useRef();
@@ -26,6 +31,8 @@ const LobbyJoinMenu = (props) => {
     const username = loadUsernameFromStorage();
     if (username) {
       usernameInputRef.current.value = username;
+    } else {
+      usernameInputRef.current.value = "";
     }
   }, [usernameInputRef]);
 
@@ -35,7 +42,11 @@ const LobbyJoinMenu = (props) => {
         <Grid item lg={12} className="marginBottom10">
           <Typography variant="h3" align="center">
             {props.lobbyId}{" "}
-            <Link to={`/lobby/${props.lobbyId.toUpperCase()}`} target="_blank">
+            <Link
+              color="textSecondary"
+              href={`/lobby/${props.lobbyId.toUpperCase()}`}
+              target="_blank"
+            >
               <LinkIcon fontSize="large" color="inherit"></LinkIcon>
             </Link>
           </Typography>
@@ -52,7 +63,10 @@ const LobbyJoinMenu = (props) => {
             margin="dense"
             fullWidth
             autoFocus
-            onSubmit={setUsernameAndJoin}
+            InputLabelProps={{ shrink: true }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") saveUsernameAndJoin();
+            }}
           />
         </Grid>
 
@@ -61,7 +75,7 @@ const LobbyJoinMenu = (props) => {
             size="medium"
             variant="contained"
             color="primary"
-            onClick={setUsernameAndJoin}
+            onClick={saveUsernameAndJoin}
           >
             Join Lobby
           </Button>
@@ -75,6 +89,7 @@ LobbyJoinMenu.propTypes = {
   lobbyId: PropTypes.string.isRequired,
   setUsername: PropTypes.func,
   joinLobby: PropTypes.func,
+  showError: PropTypes.func,
 };
 
 export default LobbyJoinMenu;

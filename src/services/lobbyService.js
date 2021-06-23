@@ -35,6 +35,7 @@ export default (() => {
           });
         })
         .catch((e) => {
+          handlers.onError("Could not check if lobby exists.");
           reject(e);
         });
     });
@@ -79,7 +80,7 @@ export default (() => {
 
   function startListeners() {
     socket.on("error", (err) => {
-      handlers.onError(err);
+      handlers.onError(err.msg);
     });
     socket.on("lobbyState", (state) => {
       lobbyState = state;
@@ -98,8 +99,13 @@ export default (() => {
   }
 
   function stopListeners() {
-    socket.off("error");
-    socket.off("connect-success");
+    if (socket) {
+      socket.off("error");
+      socket.off("lobbyState");
+      socket.off("kick");
+      socket.off("gamestarting");
+      socket.off("gameending");
+    }
   }
 
   /**
@@ -111,24 +117,33 @@ export default (() => {
   function joinLobby(id, username) {
     return new Promise((resolve, reject) => {
       if (!socket) {
-        handlers.onError("Socket not available to join lobby.");
+        handlers.onError("Socket connection not available to join lobby.");
         reject(new Error("Socket did not connect."));
+        return;
       }
       lobbyId = id;
-      startListeners();
       socket.emit("joinlobby", lobbyId, username);
       const timeout = setTimeout(() => {
-        console.log("aaaa");
-        stopListeners();
         handlers.onError("Timed out.");
         reject(new Error("Timed out."));
       }, 2000);
 
+      // Listen to an error response
+      socket.once("error", (e) => {
+        clearTimeout(timeout);
+        handlers.onError(e.msg);
+        reject(new Error(e.msg));
+      });
+
+      // Listen to a successful response
       socket.once("connect-success", (uid) => {
         clearTimeout(timeout);
+        socket.off("error"); // Don't keep using the one-time listener above
         userId = uid;
         resolve(uid);
       });
+
+      startListeners();
     });
   }
 
@@ -161,6 +176,8 @@ export default (() => {
     checkIfLobbyExists: checkIfLobbyExists,
     connect: connect,
     disconnect: disconnect,
+    startListeners: startListeners,
+    stopListeners: stopListeners,
     joinLobby: joinLobby,
     leaveLobby: leaveLobby,
     startGame: startGame,

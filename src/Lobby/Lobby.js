@@ -1,13 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { Paper, Fade } from "@material-ui/core";
+import { Fade, Box } from "@material-ui/core";
+
 import { Alert } from "@material-ui/lab";
 
 import LobbyJoinMenu from "./LobbyJoinMenu/LobbyJoinMenu";
+import LobbyNotFound from "./LobbyNotFound/LobbyNotFound";
+import LobbyMain from "./LobbyMain/LobbyMain";
 
 import lobbyService from "../services/lobbyService";
-import "../LoginPage/loginPage.scss";
 import "./lobby.css";
 
 class Lobby extends React.Component {
@@ -27,13 +29,12 @@ class Lobby extends React.Component {
       lobbyExists: null,
       lobbyId: props.match.params.id.toUpperCase(),
       gameStarted: false,
-      connected: false,
+      joined: false,
       lobbyState: null,
       myId: null,
       displayError: false,
-      lastError: null,
+      lastError: "",
     };
-
     this.usernameInputRef = React.createRef();
 
     console.log("Running in " + process.env.NODE_ENV);
@@ -53,27 +54,12 @@ class Lobby extends React.Component {
 
   reset() {
     this.setState({
-      connected: false,
+      joined: false,
       lobbyState: null,
       myId: null,
     });
     lobbyService.disconnect();
     lobbyService.connect();
-  }
-
-  getPlayerById(id) {
-    if (this.state.lobbyState && this.state.lobbyState.players) {
-      const player = this.state.lobbyState.players.find((v) => v.id === id);
-      return typeof player !== "undefined" ? player : null;
-    } else {
-      return null;
-    }
-  }
-
-  amLobbyLeader() {
-    const player = this.getPlayerById(this.state.myId);
-    if (player == null) return false;
-    else return player.isLeader;
   }
 
   componentDidMount() {
@@ -87,6 +73,7 @@ class Lobby extends React.Component {
           lobbyService.connect(); // Open a socket connection
         } else {
           this.setState({ lobbyExists: false });
+          this.showError("Lobby doesnt exist. Try creating one.");
         }
       })
       .catch(() => {
@@ -94,7 +81,9 @@ class Lobby extends React.Component {
       });
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    lobbyService.leaveLobby();
+  }
 
   setupHandlers() {
     lobbyService.handlers.onError = (e) => {
@@ -103,7 +92,7 @@ class Lobby extends React.Component {
     };
 
     lobbyService.handlers.onJoined = (userId) => {
-      this.setState({ connected: true, myId: userId });
+      this.setState({ joined: true, myId: userId });
     };
 
     lobbyService.handlers.onUpdate = (state) => {
@@ -127,13 +116,20 @@ class Lobby extends React.Component {
     };
   }
 
-  joinLobby() {
+  joinLobby(username) {
+    this.setState({ username: username });
     lobbyService
-      .joinLobby(this.state.lobbyId)
+      .joinLobby(this.state.lobbyId, username)
       .then((userId) => {
-        this.setState({ myId: userId, connected: true });
+        this.setState({ myId: userId, joined: true });
+        this.showError(
+          <span>
+            Successfully joined lobby {this.state.lobbyId} as{" "}
+            <em>{username}</em>
+          </span>
+        );
       })
-      .catch(() => {});
+      .catch((e) => {});
   }
 
   startGame() {
@@ -141,25 +137,43 @@ class Lobby extends React.Component {
   }
 
   render() {
+    console.log("exists: ", this.state.lobbyExists);
+    console.log("joined: ", this.state.joined);
     return (
-      <Paper className="LoginPage fullWidth fullHeight centerVertically centerHorizontally backgroundGradient">
-        <Fade in={this.state.displayError} id="lobby-alert">
-          <Alert variant="standard" severity="error">
-            {this.state.lastError}
-          </Alert>
-        </Fade>
-        {!this.state.connected && (
+      <Box className="lobby">
+        <Box className="lobbyBackground"></Box>
+        <Box id="lobby-alerts">
+          <Fade in={this.state.displayError}>
+            <Alert variant="standard" severity="error">
+              {this.state.lastError}
+            </Alert>
+          </Fade>
+        </Box>
+        {this.state.lobbyExists === false ? (
+          <LobbyNotFound
+            lobbyId={this.state.lobbyId}
+            showError={this.showError.bind(this)}
+          />
+        ) : this.state.lobbyExists === true && !this.state.joined ? (
           <LobbyJoinMenu
             lobbyId={this.state.lobbyId}
-            joinLobby={() => {
-              this.joinLobby();
-            }}
-            setUsername={(name) => {
-              this.setState({ username: name });
-            }}
-          ></LobbyJoinMenu>
+            showError={this.showError.bind(this)}
+            joinLobby={this.joinLobby.bind(this)}
+          />
+        ) : (
+          this.state.lobbyExists === true &&
+          this.state.joined &&
+          this.state.lobbyState && (
+            <LobbyMain
+              lobbyId={this.state.lobbyId}
+              lobbyState={this.state.lobbyState}
+              myId={this.state.myId}
+              showError={this.showError.bind(this)}
+              lobbyService={lobbyService}
+            />
+          )
         )}
-      </Paper>
+      </Box>
     );
   }
 }
