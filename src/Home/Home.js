@@ -5,7 +5,7 @@ import "./home.css";
 const Home = (props) => {
   return (
     <div>
-      <h1>Uno Clone</h1>
+      <h1>Seis</h1>
       <h3>If you have a lobby code, please enter it here.</h3>
       <p>
         <input id="lobbyId" type="text"></input>{" "}

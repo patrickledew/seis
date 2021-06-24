@@ -12,7 +12,6 @@ export default (() => {
    * Callback functions for when the lobby sends us messages. Overwrite these to update the state of frontend components. (e.g. lobbySocket.handlers.onError = ...)
    */
   const handlers = {
-    onJoined: (userid) => {}, // Called when the client successfully joins into a lobby
     onUpdate: (state) => {}, // Called when lobby sends us state information (currently connected players, lobby settings, etc.)
     onGameStart: () => {}, // Called when the lobby leader starts a game. This should be set to cause the game UI to load.
     onGameEnd: () => {}, // Called after the game has concluded. This should be set to cause the lobby UI to load again.
@@ -36,6 +35,7 @@ export default (() => {
           });
         })
         .catch((e) => {
+          handlers.onError("Could not check if lobby exists.");
           reject(e);
         });
     });
@@ -78,20 +78,16 @@ export default (() => {
    * @param {string} username The username
    */
 
-  function listen() {
+  function startListeners() {
     socket.on("error", (err) => {
-      handlers.onError(err);
-    });
-    socket.on("connect-success", (uid) => {
-      userId = uid;
-      handlers.onJoined(uid);
+      handlers.onError(err.msg);
     });
     socket.on("lobbyState", (state) => {
       lobbyState = state;
       handlers.onUpdate(state);
     });
     socket.on("kick", () => {
-      handlers.onError({ msg: "You were kicked from the lobby." });
+      handlers.onError("You were kicked from the lobby.");
       handlers.onKicked();
     });
     socket.on("gamestarting", () => {
@@ -102,10 +98,63 @@ export default (() => {
     });
   }
 
+  function stopListeners() {
+    if (socket) {
+      socket.off("error");
+      socket.off("lobbyState");
+      socket.off("kick");
+      socket.off("gamestarting");
+      socket.off("gameending");
+    }
+  }
+
+  /**
+   * Join a lobby.
+   * @param {string} id
+   * @param {string} username
+   * @returns {Promise<string>} Promise containing the user id should the connection be successful.
+   */
   function joinLobby(id, username) {
-    lobbyId = id;
-    listen();
-    socket.emit("joinlobby", lobbyId, username);
+    return new Promise((resolve, reject) => {
+      if (!socket) {
+        handlers.onError("Socket connection not available to join lobby.");
+        reject(new Error("Socket did not connect."));
+        return;
+      }
+      lobbyId = id;
+      socket.emit("joinlobby", lobbyId, username);
+
+      const timeout = setTimeout(() => {
+        handlers.onError("Timed out.");
+        reject(new Error("Timed out."));
+      }, 2000);
+
+      function joinErrorListener(e) {
+        clearTimeout(timeout);
+        socket.off("connect-success", joinSuccessListener);
+        reject(new Error(e.msg));
+      }
+
+      function joinSuccessListener(uid) {
+        clearTimeout(timeout);
+        socket.off("error", joinErrorListener);
+        userId = uid;
+        resolve(uid);
+      }
+
+      // Listen to an error response
+      socket.once("error", joinErrorListener);
+
+      // Listen to a successful response
+      socket.once("connect-success", joinSuccessListener);
+
+      startListeners();
+    });
+  }
+
+  function leaveLobby() {
+    stopListeners();
+    disconnect();
   }
 
   function startGame() {
@@ -132,8 +181,10 @@ export default (() => {
     checkIfLobbyExists: checkIfLobbyExists,
     connect: connect,
     disconnect: disconnect,
-    listen: listen,
+    startListeners: startListeners,
+    stopListeners: stopListeners,
     joinLobby: joinLobby,
+    leaveLobby: leaveLobby,
     startGame: startGame,
     kickPlayer: kickPlayer,
     changeLobbyParam: changeLobbyParam,

@@ -1,11 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import RoughGameTest from "../RoughGameTest/RoughGameTest";
-import { Redirect } from "react-router-dom";
+import { Fade, Box } from "@material-ui/core";
 
-import lobbySocket from "../services/Lobby/lobbySocket";
+import { Alert } from "@material-ui/lab";
 
+import LobbyJoinMenu from "./LobbyJoinMenu/LobbyJoinMenu";
+import LobbyNotFound from "./LobbyNotFound/LobbyNotFound";
+import LobbyMain from "./LobbyMain/LobbyMain";
+
+import GameUI from "../GameUI/GameUI";
+
+import lobbyService from "../services/lobbyService";
 import "./lobby.css";
 
 class Lobby extends React.Component {
@@ -21,240 +27,157 @@ class Lobby extends React.Component {
     super(props);
 
     this.state = {
-      username: this.loadUsernameFromStorage() || "User",
+      username: null,
       lobbyExists: null,
       lobbyId: props.match.params.id.toUpperCase(),
       gameStarted: false,
-      connected: false,
+      joined: false,
       lobbyState: null,
       myId: null,
-      error: null,
+      displayError: false,
+      lastError: "",
     };
+    this.usernameInputRef = React.createRef();
 
     console.log("Running in " + process.env.NODE_ENV);
   }
 
+  showError(e) {
+    this.setState({
+      displayError: true,
+      lastError: e,
+    });
+    setTimeout(() => {
+      this.setState({
+        displayError: false,
+      });
+    }, 5000);
+  }
+
   reset() {
     this.setState({
-      connected: false,
+      joined: false,
       lobbyState: null,
       myId: null,
     });
-    lobbySocket.disconnect();
-    lobbySocket.connect();
-  }
-
-  getPlayerById(id) {
-    if (this.state.lobbyState && this.state.lobbyState.players) {
-      const player = this.state.lobbyState.players.find((v) => v.id === id);
-      return typeof player !== "undefined" ? player : null;
-    } else {
-      return null;
-    }
-  }
-
-  amLobbyLeader() {
-    const player = this.getPlayerById(this.state.myId);
-    if (player == null) return false;
-    else return player.isLeader;
+    lobbyService.disconnect();
+    lobbyService.connect();
   }
 
   componentDidMount() {
+    this.setupHandlers();
     // Check if lobby actually exists
-    lobbySocket.checkIfLobbyExists(this.state.lobbyId).then((exists) => {
-      if (exists) {
-        this.setState({ lobbyExists: true });
-        this.setupHandlers();
-        lobbySocket.connect(); // Open a socket connection
-      } else {
-        this.setState({ lobbyExists: false });
-      }
-    });
+    lobbyService
+      .checkIfLobbyExists(this.state.lobbyId)
+      .then((exists) => {
+        if (exists) {
+          this.setState({ lobbyExists: true });
+          lobbyService.connect(); // Open a socket connection
+        } else {
+          this.setState({ lobbyExists: false });
+          this.showError("Lobby doesnt exist. Try creating one.");
+        }
+      })
+      .catch(() => {
+        this.showError("Couldn't check if lobby exists. Backend may be down.");
+      });
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    lobbyService.leaveLobby();
+  }
 
   setupHandlers() {
-    lobbySocket.handlers.onError = (e) => {
+    lobbyService.handlers.onError = (e) => {
       console.error("[Lobby Error]", e);
-      this.setState({ displayError: e });
-      setTimeout(() => this.setState({ displayError: null }), 5000);
+      this.showError(e);
     };
 
-    lobbySocket.handlers.onJoined = (userId) => {
-      this.setState({ connected: true, myId: userId });
+    lobbyService.handlers.onJoined = (userId) => {
+      this.setState({ joined: true, myId: userId });
     };
 
-    lobbySocket.handlers.onUpdate = (state) => {
+    lobbyService.handlers.onUpdate = (state) => {
       this.setState({ lobbyState: state });
     };
 
-    lobbySocket.handlers.onKicked = () => {
+    lobbyService.handlers.onKicked = () => {
       this.reset();
     };
 
-    lobbySocket.handlers.onGameStart = () => {
+    lobbyService.handlers.onGameStart = () => {
       this.setState({
         lobbyState: { ...this.state.lobbyState, inProgress: true },
       });
     };
 
-    lobbySocket.handlers.onGameEnd = () => {
+    lobbyService.handlers.onGameEnd = () => {
       this.setState({
         lobbyState: { ...this.state.lobbyState, inProgress: false },
       });
     };
   }
 
-  loadUsernameFromStorage() {
-    return localStorage.getItem("seis:username");
-  }
-
-  saveUsernameToStorage(name) {
-    localStorage.setItem("seis:username", name);
-  }
-
-  joinLobby() {
-    const inputUsername = document.getElementById("username").value;
-
-    if (inputUsername !== this.state.username) {
-      this.saveUsernameToStorage(inputUsername);
-      this.setState({ username: inputUsername });
-    }
-
-    lobbySocket.joinLobby(this.state.lobbyId, inputUsername);
+  joinLobby(username) {
+    this.setState({ username: username });
+    lobbyService
+      .joinLobby(this.state.lobbyId, username)
+      .then((userId) => {
+        this.setState({ myId: userId, joined: true });
+        this.showError(
+          <span>
+            Successfully joined lobby {this.state.lobbyId} as{" "}
+            <em>{username}</em>
+          </span>
+        );
+      })
+      .catch((e) => {});
   }
 
   startGame() {
-    lobbySocket.startGame();
+    lobbyService.startGame();
   }
 
   render() {
-    if (this.state.lobbyExists === null) {
-      return null;
-    } else if (this.state.lobbyExists === false) {
-      return <Redirect to="/" />; // Redirect if lobby doesn't exist
-    } else if (this.state.lobbyExists === true) {
-      if (this.state.lobbyState && this.state.lobbyState.inProgress === true) {
-        // If a game has started, use the game ui
-        return (
-          <div>
-            <RoughGameTest io={lobbySocket._getSocket()}></RoughGameTest>
-          </div>
-        );
-      } else {
-        // Otherwise use lobby ui
-        if (this.state.connected && this.state.lobbyState != null) {
-          return (
-            <div style={{ margin: "10px 10px 10px 10px" }}>
-              {this.state.displayError && (
-                <pre style={{ color: "red", backgroundColor: "black" }}>
-                  {" "}
-                  {this.state.displayError.msg}
-                </pre>
-              )}
-              <h1>
-                Lobby {this.state.lobbyId}{" "}
-                {this.state.lobbyState && this.state.lobbyState.isPrivate
-                  ? "[Private]"
-                  : ""}
-              </h1>
-              <a href={`/lobby/${this.state.lobbyId}`}>(Link)</a>
-              <p>You are {this.state.username}</p>
-              <br />
-              <div
-                style={{
-                  backgroundColor: "lightgrey",
-                  padding: "10px 10px 10px 10px",
-                }}
-              >
-                <h2>Lobby Settings</h2>
-                <p>
-                  Max Players:
-                  {this.state.lobbyState.maxPlayers}
-                  {this.amLobbyLeader() && (
-                    <span>
-                      <button
-                        onClick={() =>
-                          lobbySocket.setMaxPlayers(
-                            this.state.lobbyState.maxPlayers - 1
-                          )
-                        }
-                      >
-                        -
-                      </button>
-                      /
-                      <button
-                        onClick={() =>
-                          lobbySocket.setMaxPlayers(
-                            this.state.lobbyState.maxPlayers + 1
-                          )
-                        }
-                      >
-                        +
-                      </button>
-                    </span>
-                  )}
-                </p>
-                <p>
-                  Private Lobby?
-                  <input
-                    type="checkbox"
-                    disabled={!this.amLobbyLeader()}
-                    checked={this.state.lobbyState.isPrivate}
-                    onChange={() =>
-                      lobbySocket.setPrivateLobby(
-                        !this.state.lobbyState.isPrivate
-                      )
-                    }
-                  ></input>
-                </p>
-                <p>
-                  <button
-                    disabled={!this.amLobbyLeader()}
-                    onClick={() => lobbySocket.startGame()}
-                  >
-                    Start Game
-                  </button>
-                </p>
-              </div>
-              <h2>Player List:</h2>
-              <ul>
-                {this.state.lobbyState.players.map((player, i) => (
-                  <li key={i}>
-                    {player.name + (player.isLeader ? " [LEADER]" : "")}
-                    {this.amLobbyLeader() && !player.isLeader && (
-                      <button
-                        onClick={() => {
-                          if (window.confirm("U sure bro?")) {
-                            lobbySocket.kickPlayer(player.id);
-                          }
-                        }}
-                      >
-                        Kick
-                      </button>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        } else {
-          // If not connected to the lobby yet
-          return (
-            <div style={{ margin: "10px" }}>
-              <h1>Lobby {this.state.lobbyId} </h1>
-              <a href={`/lobby/${this.state.lobbyId}`}>(Link)</a>
-              <p>
-                Username:{" "}
-                <input id="username" placeholder={this.state.name}></input>
-              </p>
-              <button onClick={() => this.joinLobby()}>Join</button>
-            </div>
-          );
-        }
-      }
-    }
+    console.log("exists: ", this.state.lobbyExists);
+    console.log("joined: ", this.state.joined);
+    return (
+      <Box className="lobby">
+        <Box className="lobbyBackground"></Box>
+        <Box id="lobby-alerts">
+          <Fade in={this.state.displayError}>
+            <Alert variant="standard" severity="error">
+              {this.state.lastError}
+            </Alert>
+          </Fade>
+        </Box>
+        {!this.state.lobbyExists ? (
+          <LobbyNotFound
+            lobbyId={this.state.lobbyId}
+            showError={this.showError.bind(this)}
+          />
+        ) : !this.state.joined ? (
+          <LobbyJoinMenu
+            lobbyId={this.state.lobbyId}
+            showError={this.showError.bind(this)}
+            joinLobby={this.joinLobby.bind(this)}
+          />
+        ) : this.state.lobbyState && this.state.lobbyState.inProgress ? (
+          <GameUI></GameUI>
+        ) : (
+          this.state.joined &&
+          this.state.lobbyState && (
+            <LobbyMain
+              lobbyId={this.state.lobbyId}
+              lobbyState={this.state.lobbyState}
+              myId={this.state.myId}
+              showError={this.showError.bind(this)}
+              lobbyService={lobbyService}
+            />
+          )
+        )}
+      </Box>
+    );
   }
 }
 
