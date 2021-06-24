@@ -6,16 +6,5 @@ const Theme = createMuiTheme({
     type: "dark",
     primary: lightBlue,
   },
-  overrides: {
-    MuiCssBaseline: {
-      "@global": {
-        p: {
-          "@font-face": {
-            "font-family": "Segoe UI",
-          },
-        },
-      },
-    },
-  },
 });
 export default Theme;
