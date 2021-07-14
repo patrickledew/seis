@@ -49,10 +49,7 @@ export default (() => {
      *  If in development mode, uses port 4000.
      *  If in a production build, this will default to using the same port as the server.
      */
-    socket = io(
-      "ws://localhost" + (process.env.NODE_ENV === "development")
-        ? ":4000"
-        : "",
+    socket = io("https://seis-api-prod.azurewebsites.net/",
       {
         forceNew: false,
         transports: ["websocket"],
