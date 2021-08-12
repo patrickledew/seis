@@ -1,8 +1,8 @@
 .timerIcon {
- fill: #BEBEBE !important;
- display: inline;
- height: 3em;
+  fill: #bebebe !important;
+  display: inline;
+  height: 3em;
 }
 .timerText {
- color: #FFF
+  color: #fff;
 }

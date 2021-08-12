@@ -8,7 +8,6 @@ import "./cardPile.css";
 
 const CardPile = (props) => {
   // Seeded random number generator, credit: https://www.timemox.com/en/tricks/generate-random-number-using-seed
-  
 
   return (
     <div className="cardpile">

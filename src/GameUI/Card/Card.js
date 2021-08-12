@@ -1,8 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { useAnimatePresence } from "use-animate-presence";
 
 import "./card.css";
 const Card = (props) => {
+  const animation = useAnimatePresence({
+    variants: {
+      scale: {
+        from: 1,
+        to: 0,
+      },
+    },
+    initial: "visible",
+    duration: 1000,
+  });
   return (
     <div
       id={props.idx !== undefined ? `card-${props.idx}` : null}
@@ -24,6 +35,7 @@ const Card = (props) => {
         " " +
         (props.topCard ? "topcard" : "")
       }
+      ref={animation.ref}
       style={props.cardStyle}
       onMouseEnter={props.onMouseEnter}
       onClick={props.onClick}
@@ -45,6 +57,7 @@ Card.propTypes = {
   cardStyle: PropTypes.object,
   onMouseEnter: PropTypes.func,
   onClick: PropTypes.func,
+  animateUnmount: PropTypes.bool,
 };
 
 export default Card;

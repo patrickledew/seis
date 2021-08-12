@@ -12,8 +12,8 @@ const DrawCard = (props) => {
 };
 
 DrawCard.propTypes = {
-    onDraw: PropTypes.func,
-    inactive: PropTypes.bool
-}
+  onDraw: PropTypes.func,
+  inactive: PropTypes.bool,
+};
 
 export default DrawCard;

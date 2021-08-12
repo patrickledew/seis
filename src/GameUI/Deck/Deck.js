@@ -26,7 +26,8 @@ const Deck = (props) => {
     setTimeout(() => setShouldBump(false), 500);
   };
 
-  const cardClickFn = () => {
+  const cardClickFn = (e) => {
+    console.log("cardclick e: ", e);
     const copy = cardPlaySound.cloneNode(true);
     copy.mozPreservesPitch = false;
     copy.playbackRate = Math.random() / 5 + 1;
@@ -34,7 +35,21 @@ const Deck = (props) => {
 
     if (!props.inactive && selectedCard != null) {
       props.playCard(selectedCard);
+      setSelectedCard(null);
     }
+  };
+
+  // Calculate card position
+  const calculateCardOffset = (cardIdx) => {
+    let cardOffset;
+    if (props.cards.length > 6) {
+      cardOffset = `calc(${(cardIdx / (props.cards.length - 1)) * 100}% - 5em`;
+    } else {
+      cardOffset = `calc(50% - 2.5em - ${(6 * props.cards.length) / 2}em + ${
+        cardIdx * 6
+      }em)`;
+    }
+    return cardOffset;
   };
 
   return (
@@ -45,38 +60,31 @@ const Deck = (props) => {
             props.inactive ? "inactive" : ""
           } ${props.highlight ? "highlight" : ""}`}
         >
-          {props.cards.map((card, i) => {
-            // Calculate card position
-            let cardOffset;
-            if (props.cards.length > 6) {
-              cardOffset = `calc(${
-                (i / (props.cards.length - 1)) * 100
-              }% - 5em`;
-            } else {
-              cardOffset = `calc(50% - 2.5em - ${
-                (6 * props.cards.length) / 2
-              }em + ${i * 6}em)`;
-            }
-            return (
-              <Card
-                idx={i}
-                color={card.color}
-                value={card.value}
-                cardStyle={(() => {
-                  const style = { left: cardOffset };
+          {props.cards.map((card, i) => (
+            <Card
+              idx={i}
+              color={card.color}
+              value={card.value}
+              cardStyle={(() => {
+                const style = { left: calculateCardOffset(i) };
 
-                  return style;
-                })()}
-                position={
-                  i < selectedCard ? "left" : i > selectedCard ? "right" : ""
-                }
-                onMouseEnter={cardMouseEnterFn.bind(this, i)}
-                selected={i === selectedCard}
-                onClick={cardClickFn.bind(this)}
-                key={i}
-              ></Card>
-            );
-          })}
+                return style;
+              })()}
+              position={
+                selectedCard !== null
+                  ? i < selectedCard
+                    ? "left"
+                    : i > selectedCard
+                    ? "right"
+                    : ""
+                  : "left"
+              }
+              onMouseEnter={cardMouseEnterFn.bind(this, i)}
+              selected={i === selectedCard}
+              onClick={cardClickFn}
+              key={i}
+            ></Card>
+          ))}
         </div>
       </div>
     </div>
@@ -84,7 +92,7 @@ const Deck = (props) => {
 };
 
 Deck.propTypes = {
-  cards: PropTypes.arrayOf(PropTypes.object),
+  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
   inactive: PropTypes.bool,
   highlight: PropTypes.bool,
   playCard: PropTypes.func,

@@ -24,6 +24,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import LinkIcon from "@material-ui/icons/Link";
 import StarIcon from "@material-ui/icons/Star";
 
+import "./lobbyMain.css";
+
 const LobbyMain = (props) => {
   function getPlayerById(id) {
     if (props.lobbyState && props.lobbyState.players) {

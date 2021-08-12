@@ -1,24 +1,24 @@
 .gameBar {
-    height: auto;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: #3C3C3C;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #3c3c3c;
 }
 .backArrow {
-    color: #E4E4E4;
+  color: #e4e4e4;
 }
 
 .backArrowCircle {
-    border-radius: 50%;
-    background-color: #585858;
+  border-radius: 50%;
+  background-color: #585858;
 }
 .logo {
-    height: 3em;
+  height: 3em;
 }
 
 .gameOptionsLink {
-    color: #b0b0b0;
-    text-decoration: none;
-    margin-left: auto;
+  color: #b0b0b0;
+  text-decoration: none;
+  margin-left: auto;
 }

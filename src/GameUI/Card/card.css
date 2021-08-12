@@ -22,9 +22,13 @@
 .card.small {
   width: calc(10em * var(--card-size-factor) * var(--card-small-factor));
   height: calc(18em * var(--card-size-factor) * var(--card-small-factor));
-  border-radius: calc(10px * var(--card-size-factor) * var(--card-small-factor));
+  border-radius: calc(
+    10px * var(--card-size-factor) * var(--card-small-factor)
+  );
   padding-left: calc(10px * var(--card-size-factor) * var(--card-small-factor));
-  padding-right: calc(10px * var(--card-size-factor) * var(--card-small-factor));
+  padding-right: calc(
+    10px * var(--card-size-factor) * var(--card-small-factor)
+  );
 }
 
 .card h1 {
@@ -115,8 +119,6 @@
     #6f0000
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
-
-
 
 @keyframes fly-away {
   from {

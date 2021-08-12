@@ -2,13 +2,11 @@
  * Game Service. Will be used to interface with the socket server and provide game functionality on the client side.
  **/
 
- export default (() => {
+export default (() => {
+  return {};
+})();
 
-    return {
-    };
-})() 
-
-/** 
+/**
  * List of potential utilities:
  *  - getTurn()
  *  - playCard()

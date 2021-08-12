@@ -25,3 +25,7 @@
   transform: scale(1.1);
   z-index: -1;
 }
+
+.padding35 {
+  padding: 35px;
+}

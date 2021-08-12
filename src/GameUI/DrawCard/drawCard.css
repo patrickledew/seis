@@ -1,12 +1,12 @@
 .card-draw {
-    background: linear-gradient(to top right, #5f5f5f, #8e8d91);
-    cursor: pointer;
+  background: linear-gradient(to top right, #5f5f5f, #8e8d91);
+  cursor: pointer;
 }
 
 .card-draw:hover {
-    box-shadow: #ffffff 0px 0px 10px 2px;
+  box-shadow: #ffffff 0px 0px 10px 2px;
 }
 
 .inactive.card-draw:hover {
-    box-shadow: none !important;
+  box-shadow: none !important;
 }

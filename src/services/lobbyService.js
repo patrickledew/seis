@@ -28,14 +28,48 @@ export default (() => {
    */
   function checkIfLobbyExists(id) {
     return new Promise((resolve, reject) => {
-      fetch(`/api/lobbyexists?id=${id.toUpperCase()}`)
+      fetch(
+        process.env.REACT_APP_API_URL +
+          `/api/lobbyexists?id=${id.toUpperCase()}`
+      )
         .then((res) => {
-          res.json().then((exists) => {
-            resolve(exists);
-          });
+          if (!res.ok) {
+            handlers.onError(
+              `Could not check if lobby exists: ${res.status} ${res.statusText}`
+            );
+            reject(new Error(`${res.status} ${res.statusText}`));
+          } else {
+            res.json().then((exists) => {
+              resolve(exists);
+            });
+          }
         })
         .catch((e) => {
-          handlers.onError("Could not check if lobby exists.");
+          handlers.onError(`Could not check if lobby exists: ${e.message}`);
+          reject(e);
+        });
+    });
+  }
+
+  function createLobby(id) {
+    return new Promise((resolve, reject) => {
+      fetch(process.env.REACT_APP_API_URL + "/api/createlobby", {
+        method: "GET",
+      })
+        .then((res) => {
+          if (!res.ok) {
+            handlers.onError(
+              `Could not create a new lobby: ${res.status} ${res.statusText}`
+            );
+            reject(new Error(`${res.status} ${res.statusText}`));
+          } else {
+            res.text().then((id) => {
+              resolve(id);
+            });
+          }
+        })
+        .catch((e) => {
+          handlers.onError(`Could not create a new lobby: ${e.message}`);
           reject(e);
         });
     });
@@ -49,15 +83,10 @@ export default (() => {
      *  If in development mode, uses port 4000.
      *  If in a production build, this will default to using the same port as the server.
      */
-    socket = io(
-      "ws://localhost" + (process.env.NODE_ENV === "development")
-        ? ":4000"
-        : "",
-      {
-        forceNew: false,
-        transports: ["websocket"],
-      }
-    );
+    socket = io(process.env.REACT_APP_API_URL, {
+      forceNew: false,
+      transports: ["websocket"],
+    });
   }
 
   /**
@@ -179,6 +208,7 @@ export default (() => {
 
   return {
     checkIfLobbyExists: checkIfLobbyExists,
+    createLobby: createLobby,
     connect: connect,
     disconnect: disconnect,
     startListeners: startListeners,

@@ -9,7 +9,10 @@ import "./loginPage.scss";
 
 const LoginPage = () => {
   return (
-    <Grid container className="LoginPage fullWidth fullHeight centerVertically centerHorizontally backgroundGradient">
+    <Grid
+      container
+      className="LoginPage fullWidth fullHeight centerVertically centerHorizontally backgroundGradient"
+    >
       <Grid item xs={10} sm={6} md={5} lg={5} xl={3}>
         <Paper elevation={12}>
           <Box p="35px">
@@ -42,10 +45,9 @@ const LoginPage = () => {
                   margin="dense"
                   fullWidth
                 />
-                </Box>
-              </Grid>
-              
-  
+              </Box>
+            </Grid>
+
             <Grid item lg={12} className="centerHorizontally">
               <Box p="10px">
                 <Button size="medium" variant="contained" color="primary">
@@ -53,8 +55,8 @@ const LoginPage = () => {
                 </Button>
               </Box>
             </Grid>
-            </Box>
-          </Paper>
+          </Box>
+        </Paper>
       </Grid>
     </Grid>
   );
