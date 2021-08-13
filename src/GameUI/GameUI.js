@@ -19,7 +19,8 @@ class GameUI extends React.Component {
     this.state = {
       interval: null,
       gameState: {
-        secondsLeft: 15,
+        reversed: false,
+        secondsLeft: 5,
         myDeck: [
           { color: "red", value: "5" },
           { color: "yellow", value: "+2" },
@@ -117,9 +118,8 @@ class GameUI extends React.Component {
     } else {
       gameStateCpy.currentPlayerIdx++;
     }
-    console.log(gameStateCpy.currentPlayerIdx)
     gameStateCpy.players[gameStateCpy.currentPlayerIdx].active = true;
-    gameStateCpy.secondsLeft = 15;
+    gameStateCpy.secondsLeft = 5;
     this.setState({gameState: gameStateCpy});
   }
 
@@ -131,8 +131,8 @@ class GameUI extends React.Component {
           <Prompt message="Game in progress. Are you sure you want to leave?"></Prompt>
           <GameNavbar></GameNavbar>
           <Box display="flex" className="fullWidth fullHeight" id="game">
-            <Box width="20em">
-              <PlayerList players={this.state.gameState.players}></PlayerList>
+            <Box width="30em">
+              <PlayerList players={this.state.gameState.players} reversed={this.state.gameState.reversed}></PlayerList>
             </Box>
             <Box
               position="absolute"

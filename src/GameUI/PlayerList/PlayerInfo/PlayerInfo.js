@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import PropTypes from "prop-types";
 import { Typography } from "@material-ui/core";
 import GrayscaleCardIcon from "../../../assets/GrayscaleCardIcon.svg";
@@ -6,8 +6,14 @@ import GrayscaleCardIcon from "../../../assets/GrayscaleCardIcon.svg";
 import "./playerInfo.scss";
 
 const PlayerInfo = (props) => {
+  let ref = useRef();
+  useEffect(() => {
+    if (props.active) {
+      ref.current.scrollIntoView();
+    }
+  }, [props.active])
   return (
-    <div className={"playerInfo" + (props.active ? " active" : "")}>
+    <div ref={ref} id={props.id} className={"playerInfo" + (props.active ? " active" : "")}>
       <div className="topRow">
         <div
           className={
@@ -34,6 +40,7 @@ const PlayerInfo = (props) => {
 };
 
 PlayerInfo.propTypes = {
+  id: PropTypes.string,
   player: PropTypes.object,
   colorIndex: PropTypes.number.isRequired,
   active: PropTypes.bool
