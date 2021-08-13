@@ -26,7 +26,7 @@ const Home = (props) => {
                 }
               })
               .catch((e) => {
-                errorRef.current.innerText = e.message;
+                errorRef.current.innerText = "Could not join lobby: " + e.message;
               });
           }}
         >
@@ -42,6 +42,9 @@ const Home = (props) => {
           onClick={() => {
             createLobby().then((id) => {
               window.location.href = `/lobby/${id}`;
+            })
+            .catch((e) => {
+              errorRef.current.innerText = "Could not create lobby: " + e.message;
             });
           }}
         >

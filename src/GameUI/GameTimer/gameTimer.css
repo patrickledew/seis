@@ -1,8 +1,23 @@
+.gameTimer {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  padding-right: 40px;
+  margin-top: 20px;
+  color: #FEFEFE;
+}
+
+.gameTimer.runningOut {
+  color: #ff5d5d !important
+}
+
+
 .timerIcon {
-  fill: #bebebe !important;
-  display: inline;
-  height: 3em;
+  fill: currentColor;
+  height: 1.6em !important;
+  width: auto !important;
+  margin-right: 10px;
 }
 .timerText {
-  color: #fff;
+  font-size: 2.8em !important;
 }

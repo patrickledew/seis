@@ -53,7 +53,7 @@
 }
 
 .inactive .card {
-  filter: brightness(0.5) saturate(0.5);
+  filter: brightness(0.7) saturate(0.8);
   cursor: default !important;
 }
 .card.inactive {

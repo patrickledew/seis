@@ -1,0 +1,26 @@
+.playerList {
+  margin-left: 40px;
+  display: flex;
+  height: 100%;
+  min-height: 100%;
+  flex-direction: column;
+  
+}
+.playerList h2 {
+  margin-top: 20px;
+}
+
+.players {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #333333 #2c2b2b ;
+    scroll-snap-type: y mandatory;
+}
+
+.players .playerInfo {
+  scroll-snap-align: start;
+  flex-basis: 15%;
+  flex-shrink: 0;
+}
