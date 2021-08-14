@@ -42,5 +42,8 @@
 }
 .Lobby .startText {
   font-size: 2rem;
-  font-family: Roboto;
+  font-family: "Roboto";
+}
+.textCenter {
+  text-align: center;
 }
