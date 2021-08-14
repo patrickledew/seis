@@ -4,6 +4,7 @@ import { spacing } from "@material-ui/system";
 import MuiButton from "@material-ui/core/Button";
 import LinkIcon from "@material-ui/icons/Link";
 import PropTypes from "prop-types";
+import lobbyService from "../../services/lobbyService";
 
 import "./lobbyNotFound.css";
 
@@ -11,18 +12,9 @@ const LobbyNotFound = (props) => {
   const Button = styled(MuiButton)(spacing);
 
   function createLobby() {
-    fetch("/api/createlobby", { method: "GET" })
-      .then((res) => {
-        if (!res.ok) throw new Error(res.statusText); // No more lobbies
-        res.text().then((id) => {
-          window.location.href = `/lobby/${id}`;
-        });
-      })
-      .catch((e) => {
-        props.showError(
-          "Could not create a new lobby. The backend may be down."
-        );
-      });
+    lobbyService.createLobby().then((id) => {
+      window.location.href = `/lobby/${id}`;
+    });
   }
 
   return (

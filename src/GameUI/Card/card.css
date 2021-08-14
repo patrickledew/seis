@@ -1,42 +1,68 @@
+:root {
+  --card-size-factor: 0.9;
+  --card-small-factor: 0.8;
+}
 .card {
   position: absolute;
   display: inline-flex;
   justify-content: center;
   align-content: center;
   flex-direction: column;
-  width: 10em;
-  height: 18em;
+  width: calc(10em * var(--card-size-factor));
+  height: calc(18em * var(--card-size-factor));
   border: 0px solid rgba(255, 255, 255, 0.788);
-  border-radius: 10px;
+  border-radius: calc(10px * var(--card-size-factor));
   box-shadow: #00000044 0px 0px 5px;
   transition: transform 0.15s ease-out;
   user-select: none;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: calc(10px * var(--card-size-factor));
+  padding-right: calc(10px * var(--card-size-factor));
+}
+
+.card.small {
+  width: calc(10em * var(--card-size-factor) * var(--card-small-factor));
+  height: calc(18em * var(--card-size-factor) * var(--card-small-factor));
+  border-radius: calc(
+    10px * var(--card-size-factor) * var(--card-small-factor)
+  );
+  padding-left: calc(10px * var(--card-size-factor) * var(--card-small-factor));
+  padding-right: calc(
+    10px * var(--card-size-factor) * var(--card-small-factor)
+  );
+}
+
+.card h1 {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: calc(4em * var(--card-size-factor));
+  text-align: center;
+  color: #ffffff;
+}
+
+.card h2.first {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: calc(1.5em * var(--card-size-factor));
+  align-self: flex-start;
+  color: #ffffff;
+}
+
+.card h2.last {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: calc(1.5em * var(--card-size-factor));
+  align-self: flex-end;
+  color: #ffffff;
 }
 
 .inactive .card {
-  filter: saturate(0.5);
+  filter: brightness(0.7) saturate(0.8);
+  cursor: default !important;
+}
+.card.inactive {
+  filter: brightness(0.5) saturate(0.5);
   cursor: default !important;
 }
 
 .mydeck .card {
   cursor: pointer;
-}
-
-.card.small {
-  width: 7em;
-  height: 12.6em;
-  border-radius: 7px;
-  padding-left: 7px;
-  padding-right: 7px;
-}
-.card.small h1 {
-  font-size: 2.8em !important;
-}
-
-.card.small h2 {
-  font-size: 1.05em !important;
 }
 
 .card.selected {
@@ -49,21 +75,21 @@
 }
 
 .card.right {
-  transform: translate(6em, 1em);
+  transform: translate(calc(6em * var(--card-size-factor)), 1em);
   rotate: 2deg;
 }
 
 .bump .card.right {
-  transform: translate(6.5em, 1em);
+  transform: translate(calc(6.5em * var(--card-size-factor)), 1em);
 }
 
 .card.left {
-  transform: translate(-2em, 1em);
+  transform: translate(calc(-2em * var(--card-size-factor)), 1em);
   rotate: -2deg;
 }
 
 .bump .card.left {
-  transform: translate(-3em, 1em);
+  transform: translate(calc(-3em * var(--card-size-factor)), 1em);
 }
 
 .card-red {
@@ -92,27 +118,6 @@
     #200122,
     #6f0000
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-
-.card h1 {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 4em;
-  text-align: center;
-  color: #ffffff;
-}
-
-.card h2.first {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 1.5em;
-  align-self: flex-start;
-  color: #ffffff;
-}
-
-.card h2.last {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 1.5em;
-  align-self: flex-end;
-  color: #ffffff;
 }
 
 @keyframes fly-away {

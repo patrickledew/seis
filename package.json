@@ -16,6 +16,7 @@
     "react-scripts": "4.0.3",
     "sass": "^1.35.1",
     "socket.io-client": "^4.1.1",
+    "use-animate-presence": "^0.5.2",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
@@ -44,7 +45,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://seis-api-dev.azurewebsites.net",
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.5",
     "eslint": "^7.29.0",
