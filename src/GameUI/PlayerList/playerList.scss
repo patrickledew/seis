@@ -1,0 +1,39 @@
+.playerList {
+  margin-left: 40px;
+  display: flex;
+  height: 100%;
+  min-height: 100%;
+  flex-direction: column;
+}
+.playerList h2 {
+  margin-top: 20px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.players {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #333333 #2c2b2b;
+  scroll-snap-type: y mandatory;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.players .playerInfo {
+  scroll-snap-align: start;
+  flex-basis: 15%;
+  flex-shrink: 0;
+}
+
+.directionArrow {
+  margin-left: auto;
+  rotate: 90deg;
+  transition: transform 1s ease-in-out !important;
+}
+
+.directionArrow.reversed {
+  transform: rotate(-180deg) !important;
+}
