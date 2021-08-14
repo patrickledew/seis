@@ -44,7 +44,7 @@ const Home = (props) => {
               .then((res) => {
                 if (!res.ok) throw new Error(res.statusText); // No more lobbies
                 res.text().then((id) => {
-                  window.location.href = `/lobby/${id}`;
+                  `/lobby/${id}`;
                 });
               })
               .catch((e) => {

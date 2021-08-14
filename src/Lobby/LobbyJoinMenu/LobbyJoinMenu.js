@@ -11,6 +11,7 @@ import LinkIcon from "@material-ui/icons/Link";
 import PropTypes from "prop-types";
 
 const LobbyJoinMenu = (props) => {
+  
   function loadUsernameFromStorage() {
     return localStorage.getItem("seis:username");
   }

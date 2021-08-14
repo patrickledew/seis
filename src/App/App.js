@@ -4,6 +4,7 @@ import Home from "../Home/Home";
 import Lobby from "../Lobby/Lobby";
 import FourOhFour from "../404/404";
 import LoginPage from "../LoginPage/LoginPage";
+import LobbyNew from "../New-Lobby/Lobby";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Theme from "../theme/Theme";
@@ -19,7 +20,9 @@ function App() {
             <Route path="/login" component={LoginPage} />
             <Route path="/lobby/:id" component={Lobby} />
             <Route path="/decktest" component={GameUI} />
+            <Route path="/new-lobby" component={LobbyNew}/>
             <Route path="*" component={FourOhFour} />
+            
           </Switch>
         </BrowserRouter>
       </div>
