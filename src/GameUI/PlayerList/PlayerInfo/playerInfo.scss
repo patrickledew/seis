@@ -1,12 +1,11 @@
 @import "../../../common/playerGradients.scss";
 
-
 $player-icon-size: 60px;
 
 .playerInfo {
-    //background-color: rgb(53, 53, 53);
-    padding: 20px;
-    border-radius: 10px;
+  //background-color: rgb(53, 53, 53);
+  padding: 20px;
+  border-radius: 10px;
 }
 
 .playerIcon {
@@ -22,29 +21,29 @@ $player-icon-size: 60px;
 }
 
 .playerInfo.active .playerIcon {
-    box-shadow: 0px 0px 7px 5px rgba(255, 255, 255, 0.857);
+  box-shadow: 0px 0px 7px 5px rgba(255, 255, 255, 0.857);
 }
 
 .playerIcon h3 {
-    font-size: 2.4em !important;
+  font-size: 2.4em !important;
 }
 
 .playerName {
-    display: inline;
+  display: inline;
 }
 
 .topRow {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .cardCount {
-    margin-left: calc(#{$player-icon-size} + 2em);
-    display: flex;
-    align-items: center;
+  margin-left: calc(#{$player-icon-size} + 2em);
+  display: flex;
+  align-items: center;
 }
 
 .cardIcon {
-    width: 40px;
-    margin-right: 10px;
+  width: 40px;
+  margin-right: 10px;
 }

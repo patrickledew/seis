@@ -75,7 +75,8 @@ class GameUI extends React.Component {
             name: "bogus",
             numCards: 2,
             active: false,
-          },{
+          },
+          {
             name: "Hoodie",
             numCards: 10,
             active: false,
@@ -89,30 +90,30 @@ class GameUI extends React.Component {
             name: "A Really Long Name :) Like seriously tho we should check that names this long aren't allowed cuz it'll probably break the UI",
             numCards: 2,
             active: false,
-          }
-          
+          },
         ],
       },
     };
   }
 
   componentDidMount() {
-      this.setState({interval: setInterval(() => {
-            if (this.state.gameState.secondsLeft > 0) {
-              const gameStateCpy = this.state.gameState;
-              gameStateCpy.secondsLeft--;
-              this.setState({gameState: gameStateCpy});
-            } else {
-              this.nextTurn();
-            }
-        }, 1000)});
+    this.setState({
+      interval: setInterval(() => {
+        if (this.state.gameState.secondsLeft > 0) {
+          const gameStateCpy = this.state.gameState;
+          gameStateCpy.secondsLeft--;
+          this.setState({ gameState: gameStateCpy });
+        } else {
+          this.nextTurn();
+        }
+      }, 1000),
+    });
   }
-
 
   nextTurn() {
     const gameStateCpy = this.state.gameState;
     gameStateCpy.players[gameStateCpy.currentPlayerIdx].active = false;
-    
+
     if (gameStateCpy.currentPlayerIdx === gameStateCpy.players.length - 1) {
       gameStateCpy.currentPlayerIdx = 0;
     } else {
@@ -120,9 +121,8 @@ class GameUI extends React.Component {
     }
     gameStateCpy.players[gameStateCpy.currentPlayerIdx].active = true;
     gameStateCpy.secondsLeft = 5;
-    this.setState({gameState: gameStateCpy});
+    this.setState({ gameState: gameStateCpy });
   }
-
 
   render() {
     return (
@@ -132,7 +132,10 @@ class GameUI extends React.Component {
           <GameNavbar></GameNavbar>
           <Box display="flex" className="fullWidth fullHeight" id="game">
             <Box width="30em">
-              <PlayerList players={this.state.gameState.players} reversed={this.state.gameState.reversed}></PlayerList>
+              <PlayerList
+                players={this.state.gameState.players}
+                reversed={this.state.gameState.reversed}
+              ></PlayerList>
             </Box>
             <Box
               position="absolute"
@@ -156,10 +159,11 @@ class GameUI extends React.Component {
                   gameStateCpy.players[0].numCards -= 1;
                   gameStateCpy.cardPile = gameStateCpy.cardPile.concat(theCard);
                   this.setState({
-                    gameState: gameStateCpy
+                    gameState: gameStateCpy,
                   });
                   this.nextTurn();
-                }} inactive={this.state.gameState.currentPlayerIdx !== 0}
+                }}
+                inactive={this.state.gameState.currentPlayerIdx !== 0}
               ></Deck>
             </Box>
             <Box display="flex" flexDirection="column" width="20em" ml="auto">
@@ -170,7 +174,9 @@ class GameUI extends React.Component {
               bottom="calc(var(--card-size-factor) * 18em + 2em)"
               right="calc(var(--card-size-factor) * 10em + 3em)"
             >
-              <DrawCard inactive={this.state.gameState.currentPlayerIdx !== 0}></DrawCard>
+              <DrawCard
+                inactive={this.state.gameState.currentPlayerIdx !== 0}
+              ></DrawCard>
             </Box>
           </Box>
         </Box>

@@ -4,13 +4,12 @@
   align-items: center;
   padding-right: 40px;
   margin-top: 20px;
-  color: #FEFEFE;
+  color: #fefefe;
 }
 
 .gameTimer.runningOut {
-  color: #ff5d5d !important
+  color: #ff5d5d !important;
 }
-
 
 .timerIcon {
   fill: currentColor;

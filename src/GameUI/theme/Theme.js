@@ -7,10 +7,9 @@ const Theme = createMuiTheme({
     primary: lightBlue,
   },
   typography: {
-      allVariants: {
-          fontFamily: "Patrick Hand, Segoe UI"
-      }
-  }
-
+    allVariants: {
+      fontFamily: "Patrick Hand, Segoe UI",
+    },
+  },
 });
 export default Theme;

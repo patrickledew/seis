@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { Box, Typography } from "@material-ui/core";
 import HourglassEmptyRoundedIcon from "@material-ui/icons/HourglassEmptyRounded";
@@ -10,13 +10,14 @@ const GameTimer = (props) => {
   const timerStr = `${minutePart}:${secondPart.toString().padStart(2, "0")}`;
 
   return (
-    <Box height="5em" className={"gameTimer centerText" + (props.seconds < 10 ? " runningOut" : "")}>
-      <HourglassEmptyRoundedIcon className="timerIcon centerText" ></HourglassEmptyRoundedIcon>
-      <Typography
-        display="inline"
-        variant="h3"
-        className="timerText"
-      >
+    <Box
+      height="5em"
+      className={
+        "gameTimer centerText" + (props.seconds < 10 ? " runningOut" : "")
+      }
+    >
+      <HourglassEmptyRoundedIcon className="timerIcon centerText"></HourglassEmptyRoundedIcon>
+      <Typography display="inline" variant="h3" className="timerText">
         {timerStr}
       </Typography>
     </Box>
@@ -24,7 +25,7 @@ const GameTimer = (props) => {
 };
 
 GameTimer.propTypes = {
-  seconds: PropTypes.number
-}
+  seconds: PropTypes.number,
+};
 
 export default GameTimer;
