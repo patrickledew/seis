@@ -38,7 +38,7 @@ const LobbyMain = (props) => {
   function amLobbyLeader() {
     const player = getPlayerById(props.myId);
     if (player == null) return false;
-    else return player.isLeader;
+    else return player.leader;
   }
 
   function handlePrivateCheckbox(e) {
@@ -89,8 +89,8 @@ const LobbyMain = (props) => {
                         return (
                           <ListItem key={i}>
                             <ListItemIcon>
-                              {amLobbyLeader() && !p.isLeader && (
-                                <Tooltip title="Kick Player" enterDelay="1s">
+                              {amLobbyLeader() && !p.leader && (
+                                <Tooltip title="Kick Player" enterDelay={200}>
                                   <IconButton
                                     onClick={() =>
                                       props.lobbyService.kickPlayer(p.id)
@@ -100,7 +100,7 @@ const LobbyMain = (props) => {
                                   </IconButton>
                                 </Tooltip>
                               )}
-                              {p.isLeader && (
+                              {p.leader && (
                                 <Tooltip title="Lobby Leader" enterDelay={200}>
                                   <IconButton>
                                     <StarIcon style={{ color: "#faea76" }} />
