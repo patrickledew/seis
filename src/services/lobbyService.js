@@ -29,8 +29,7 @@ export default (() => {
   function checkIfLobbyExists(id) {
     return new Promise((resolve, reject) => {
       fetch(
-        process.env.REACT_APP_API_URL +
-          `/api/lobbyinfo?id=${id.toUpperCase()}`
+        process.env.REACT_APP_API_URL + `/api/lobbyinfo?id=${id.toUpperCase()}`
       )
         .then((res) => {
           if (!res.ok) {
