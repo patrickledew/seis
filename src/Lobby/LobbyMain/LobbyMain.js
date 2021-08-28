@@ -136,7 +136,7 @@ const LobbyMain = (props) => {
                         control={
                           <Checkbox
                             color="primary"
-                            checked={props.lobbyState.isPrivate}
+                            checked={props.lobbyState.private}
                             disabled={!amLobbyLeader()}
                             onChange={handlePrivateCheckbox}
                           ></Checkbox>

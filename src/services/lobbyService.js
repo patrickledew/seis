@@ -187,7 +187,7 @@ export default (() => {
   }
 
   function startGame() {
-    socket.emit("startgame");
+    socket.emit("start-game");
   }
 
   function kickPlayer(id) {
