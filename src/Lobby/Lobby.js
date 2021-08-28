@@ -139,8 +139,6 @@ class Lobby extends React.Component {
   }
 
   render() {
-    console.log("exists: ", this.state.lobbyExists);
-    console.log("joined: ", this.state.joined);
     return (
       <Box className="lobby">
         <Box className="lobbyBackground"></Box>

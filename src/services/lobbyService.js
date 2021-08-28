@@ -29,8 +29,7 @@ export default (() => {
   function checkIfLobbyExists(id) {
     return new Promise((resolve, reject) => {
       fetch(
-        process.env.REACT_APP_API_URL +
-          `/api/lobbyexists?id=${id.toUpperCase()}`
+        process.env.REACT_APP_API_URL + `/api/lobbyinfo?id=${id.toUpperCase()}`
       )
         .then((res) => {
           if (!res.ok) {
@@ -39,8 +38,8 @@ export default (() => {
             );
             reject(new Error(`${res.status} ${res.statusText}`));
           } else {
-            res.json().then((exists) => {
-              resolve(exists);
+            res.json().then((info) => {
+              resolve(info.exists);
             });
           }
         })
@@ -51,10 +50,10 @@ export default (() => {
     });
   }
 
-  function createLobby(id) {
+  function createLobby() {
     return new Promise((resolve, reject) => {
       fetch(process.env.REACT_APP_API_URL + "/api/createlobby", {
-        method: "GET",
+        method: "POST",
       })
         .then((res) => {
           if (!res.ok) {
@@ -83,7 +82,7 @@ export default (() => {
      *  If in development mode, uses port 4000.
      *  If in a production build, this will default to using the same port as the server.
      */
-    socket = io(process.env.REACT_APP_API_URL, {
+    socket = io(process.env.REACT_APP_API_URL + "/api/lobby", {
       forceNew: false,
       transports: ["websocket"],
     });
@@ -108,10 +107,10 @@ export default (() => {
    */
 
   function startListeners() {
-    socket.on("error", (err) => {
-      handlers.onError(err.msg);
+    socket.on("error", (e) => {
+      handlers.onError(e);
     });
-    socket.on("lobbyState", (state) => {
+    socket.on("update", (state) => {
       lobbyState = state;
       handlers.onUpdate(state);
     });
@@ -130,7 +129,7 @@ export default (() => {
   function stopListeners() {
     if (socket) {
       socket.off("error");
-      socket.off("lobbyState");
+      socket.off("update");
       socket.off("kick");
       socket.off("gamestarting");
       socket.off("gameending");
@@ -151,7 +150,7 @@ export default (() => {
         return;
       }
       lobbyId = id;
-      socket.emit("joinlobby", lobbyId, username);
+      socket.emit("join", lobbyId, username);
 
       const timeout = setTimeout(() => {
         handlers.onError("Timed out.");
@@ -160,8 +159,8 @@ export default (() => {
 
       function joinErrorListener(e) {
         clearTimeout(timeout);
-        socket.off("connect-success", joinSuccessListener);
-        reject(new Error(e.msg));
+        socket.off("joined", joinSuccessListener);
+        reject(new Error(e));
       }
 
       function joinSuccessListener(uid) {
@@ -175,7 +174,7 @@ export default (() => {
       socket.once("error", joinErrorListener);
 
       // Listen to a successful response
-      socket.once("connect-success", joinSuccessListener);
+      socket.once("joined", joinSuccessListener);
 
       startListeners();
     });
@@ -187,15 +186,15 @@ export default (() => {
   }
 
   function startGame() {
-    socket.emit("startgame");
+    socket.emit("start-game");
   }
 
   function kickPlayer(id) {
-    socket.emit("kickplayer", id);
+    socket.emit("kick", id);
   }
 
   function changeLobbyParam(param, newvalue) {
-    socket.emit("changelobbyparam", param, newvalue);
+    socket.emit("lobby-settings", param, newvalue);
   }
 
   function setMaxPlayers(newvalue) {
