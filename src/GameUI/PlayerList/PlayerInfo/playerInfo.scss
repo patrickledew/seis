@@ -6,6 +6,11 @@ $player-icon-size: 60px;
   //background-color: rgb(53, 53, 53);
   padding: 20px;
   border-radius: 10px;
+  transition: transform 0.5s ease-in-out;
+}
+
+.playerInfo.active {
+  transform: translateX(20px);
 }
 
 .playerIcon {

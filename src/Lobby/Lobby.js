@@ -26,6 +26,8 @@ class Lobby extends React.Component {
   constructor(props) {
     super(props);
 
+
+
     this.state = {
       username: null,
       lobbyExists: null,
@@ -139,7 +141,11 @@ class Lobby extends React.Component {
   }
 
   render() {
-    return (
+    console.log(this.state.lobbyState);
+    if (this.state.lobbyState && this.state.lobbyState.inProgress) {
+      return <GameUI io={lobbyService._getSocket()}></GameUI>;
+    }
+    else return (
       <Box className="lobby">
         <Box className="lobbyBackground"></Box>
         <Box id="lobby-alerts">
@@ -160,11 +166,7 @@ class Lobby extends React.Component {
             showError={this.showError.bind(this)}
             joinLobby={this.joinLobby.bind(this)}
           />
-        ) : this.state.lobbyState && this.state.lobbyState.inProgress ? (
-          <GameUI></GameUI>
-        ) : (
-          this.state.joined &&
-          this.state.lobbyState && (
+        ) : this.state.lobbyState && (
             <LobbyMain
               lobbyId={this.state.lobbyId}
               lobbyState={this.state.lobbyState}
@@ -173,7 +175,7 @@ class Lobby extends React.Component {
               lobbyService={lobbyService}
             />
           )
-        )}
+        }
       </Box>
     );
   }

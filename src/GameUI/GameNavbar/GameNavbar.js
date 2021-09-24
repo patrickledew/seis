@@ -8,7 +8,7 @@ import "./gameNavbar.css";
 
 const GameNavbar = (props) => {
   return (
-    <Box className="gameBar fullWidth centerVertically">
+    <Box className="gameBar centerVertically">
       <Box p={2}>
         <Link to="/">
           <Box className="backArrowCircle centerHorizontally centerVertically">

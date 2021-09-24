@@ -118,21 +118,21 @@ export default (() => {
       handlers.onError("You were kicked from the lobby.");
       handlers.onKicked();
     });
-    socket.on("gamestarting", () => {
+    socket.on("game-starting", () => {
       handlers.onGameStart();
     });
-    socket.on("gameending", () => {
+    socket.on("game-ending", () => {
       handlers.onGameEnd();
     });
   }
 
   function stopListeners() {
     if (socket) {
-      socket.off("error");
-      socket.off("update");
-      socket.off("kick");
-      socket.off("gamestarting");
-      socket.off("gameending");
+      socket.removeAllListeners("error");
+      socket.removeAllListeners("update");
+      socket.removeAllListeners("kick");
+      socket.removeAllListeners("gamestarting");
+      socket.removeAllListeners("gameending");
     }
   }
 

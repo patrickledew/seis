@@ -5,7 +5,8 @@ import GameNavbar from "./GameNavbar/GameNavbar";
 import GameTimer from "./GameTimer/GameTimer";
 
 import { Prompt } from "react-router-dom";
-import { Box } from "@material-ui/core";
+import { Box, Fade } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import { ThemeProvider } from "@material-ui/core/styles";
 import gameTheme from "./theme/Theme";
 
@@ -13,124 +14,88 @@ import "./gameUI.css";
 import DrawCard from "./DrawCard/DrawCard";
 import PlayerList from "./PlayerList/PlayerList";
 
+import gameService from "../services/gameService";
+import PropTypes from "prop-types";
+import { Socket } from "socket.io-client";
+
 class GameUI extends React.Component {
+  static propTypes = {
+    io: PropTypes.instanceOf(Socket).isRequired
+  };
+
+
   constructor(props) {
     super(props);
+
+    gameService.bindSocket(props.io);
+
     this.state = {
-      interval: null,
       gameState: {
-        reversed: false,
-        secondsLeft: 5,
-        myDeck: [
-          { color: "red", value: "5" },
-          { color: "yellow", value: "+2" },
-          { color: "blue", value: "5" },
-          { color: "yellow", value: "+2" },
-          { color: "green", value: "5" },
-          { color: "green", value: "+2" },
-          { color: "red", value: "5" },
-          { color: "blue", value: "+2" },
-          { color: "green", value: "5" },
-          { color: "green", value: "+2" },
-          { color: null, value: "W" },
-          { color: "blue", value: "+2" },
-          { color: "blue", value: "+2" },
-          { color: "blue", value: "+2" },
-          { color: "blue", value: "+2" },
-          { color: "red", value: "5" },
-          { color: "yellow", value: "+2" },
-          { color: "blue", value: "5" },
-          { color: "yellow", value: "+2" },
-          { color: "green", value: "5" },
-        ],
-        cardPile: [{ color: null, value: "W" }],
-        currentPlayerIdx: 0,
-        players: [
-          {
-            name: "Ricky",
-            numCards: 20,
-            active: true,
-          },
-          {
-            name: "JTrops",
-            numCards: 5,
-            active: false,
-          },
-          {
-            name: "Chowder",
-            numCards: 69,
-            active: false,
-          },
-          {
-            name: "Tomas",
-            numCards: 12,
-            active: false,
-          },
-          {
-            name: "8092",
-            numCards: 3000,
-            active: false,
-          },
-          {
-            name: "bogus",
-            numCards: 2,
-            active: false,
-          },
-          {
-            name: "Hoodie",
-            numCards: 10,
-            active: false,
-          },
-          {
-            name: "Churrizo",
-            numCards: 8,
-            active: false,
-          },
-          {
-            name: "A Really Long Name :) Like seriously tho we should check that names this long aren't allowed cuz it'll probably break the UI",
-            numCards: 2,
-            active: false,
-          },
-        ],
+        my: {
+          turn: false,
+          uid: null,
+          deck: []
+        },
+        players: [],
+        cardPile: [],
+        timer: 0,
+        activeUid: null,
+
       },
+      displayError: false,
+      lastError: ""
     };
   }
 
-  componentDidMount() {
-    this.setState({
-      interval: setInterval(() => {
-        if (this.state.gameState.secondsLeft > 0) {
-          const gameStateCpy = this.state.gameState;
-          gameStateCpy.secondsLeft--;
-          this.setState({ gameState: gameStateCpy });
-        } else {
-          this.nextTurn();
-        }
-      }, 1000),
-    });
+  getPlayer(uid) {
+    return this.state.gameState.players.find(p => p.uid === uid)
   }
 
-  nextTurn() {
-    const gameStateCpy = this.state.gameState;
-    gameStateCpy.players[gameStateCpy.currentPlayerIdx].active = false;
+  getActivePlayer() {
+    return this.getPlayer(this.state.gameState.activeUid);
+  }
 
-    if (gameStateCpy.currentPlayerIdx === gameStateCpy.players.length - 1) {
-      gameStateCpy.currentPlayerIdx = 0;
-    } else {
-      gameStateCpy.currentPlayerIdx++;
+  setupHandlers() {
+    gameService.handlers.onError = (e) => {
+      console.error("[Game Error]", e);
+      this.showError(e);
     }
-    gameStateCpy.players[gameStateCpy.currentPlayerIdx].active = true;
-    gameStateCpy.secondsLeft = 5;
-    this.setState({ gameState: gameStateCpy });
+    gameService.handlers.onUpdate = (state) => {
+      this.setState({ gameState: state });
+    }
+  }
+
+  componentDidMount() {
+    this.setupHandlers();
+    gameService.ready();
+  }
+  
+  showError(e) {
+    this.setState({
+      displayError: true,
+      lastError: e,
+    });
+    setTimeout(() => {
+      this.setState({
+        displayError: false,
+      });
+    }, 5000);
   }
 
   render() {
     return (
       <ThemeProvider theme={gameTheme}>
         <Box>
+          <Box id="game-alerts">
+            <Fade in={this.state.displayError}>
+              <Alert variant="standard" severity="error">
+                {this.state.lastError}
+              </Alert>
+            </Fade>
+          </Box>
           <Prompt message="Game in progress. Are you sure you want to leave?"></Prompt>
           <GameNavbar></GameNavbar>
-          <Box display="flex" className="fullWidth fullHeight" id="game">
+          <Box display="flex" flexDirection="column" class="fullHeight" id="game">
             <Box width="30em">
               <PlayerList
                 players={this.state.gameState.players}
@@ -152,22 +117,13 @@ class GameUI extends React.Component {
               width="calc(max(100% - (20em * 2), 30em))"
             >
               <Deck
-                cards={this.state.gameState.myDeck}
-                playCard={(idx) => {
-                  const gameStateCpy = this.state.gameState;
-                  const theCard = gameStateCpy.myDeck.splice(idx, 1);
-                  gameStateCpy.players[0].numCards -= 1;
-                  gameStateCpy.cardPile = gameStateCpy.cardPile.concat(theCard);
-                  this.setState({
-                    gameState: gameStateCpy,
-                  });
-                  this.nextTurn();
-                }}
-                inactive={this.state.gameState.currentPlayerIdx !== 0}
+                cards={this.state.gameState.my.deck}
+                playCard={(idx) => {}}
+                inactive={!this.state.gameState.my.turn}
               ></Deck>
             </Box>
-            <Box display="flex" flexDirection="column" width="20em" ml="auto">
-              <GameTimer seconds={this.state.gameState.secondsLeft}></GameTimer>
+            <Box width="20em" ml="auto">
+              <GameTimer seconds={this.state.gameState.timer}></GameTimer>
             </Box>
             <Box
               position="absolute"
@@ -175,7 +131,7 @@ class GameUI extends React.Component {
               right="calc(var(--card-size-factor) * 10em + 3em)"
             >
               <DrawCard
-                inactive={this.state.gameState.currentPlayerIdx !== 0}
+                inactive={!this.state.gameState.my.turn}
               ></DrawCard>
             </Box>
           </Box>
