@@ -37,6 +37,14 @@ export default (() => {
     return gameState;
   }
 
+  function playCard(card) {
+    socket.emit('play-card', card);
+  }
+
+  function drawCards() {
+    socket.emit('draw-cards');
+  }
+
   function startListeners() {
     socket.on("game-error", (e) => {
       handlers.onError(e);
@@ -69,6 +77,8 @@ export default (() => {
     getState: getState,
     startListeners: startListeners,
     stopListeners: stopListeners,
+    playCard: playCard,
+    drawCards: drawCards,
 
     _getSocket: () => {
       return socket;

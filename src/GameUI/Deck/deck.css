@@ -13,3 +13,11 @@
   margin: 0;
   height: 20em;
 }
+@keyframes slideinfromright {
+  from {
+    transform: translateX(30em);
+  }
+}
+.deck .card.topcard {
+  animation: slideinfromright 0.1s;
+}

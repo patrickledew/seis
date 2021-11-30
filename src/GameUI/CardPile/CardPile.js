@@ -23,6 +23,7 @@ const CardPile = (props) => {
               transform: `rotateZ(${cardRotation}) translateY(${i * 2}px)`,
             }}
             topCard={i === props.cards.length - 1}
+            playedByOpponent={card.from !== props.myUid}
             key={i}
           />
         );
@@ -33,6 +34,7 @@ const CardPile = (props) => {
 
 CardPile.propTypes = {
   cards: PropTypes.arrayOf(PropTypes.object),
+  myUid: PropTypes.number
 };
 
 export default CardPile;

@@ -5,7 +5,9 @@ import "./drawCard.css";
 
 const DrawCard = (props) => {
   return (
-    <div className={`card card-draw small ${props.inactive && "inactive"}`}>
+    <div className={`card card-draw small ${props.inactive && "inactive"}`} onClick={() => {
+      if (!props.inactive) props.onDraw();
+    }}>
       <h1>+</h1>
     </div>
   );

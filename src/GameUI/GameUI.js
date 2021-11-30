@@ -3,7 +3,7 @@ import Deck from "./Deck/Deck";
 import CardPile from "./CardPile/CardPile";
 import GameNavbar from "./GameNavbar/GameNavbar";
 import GameTimer from "./GameTimer/GameTimer";
-
+import ColorPrompt from "./ColorPrompt/ColorPrompt";
 import { Prompt } from "react-router-dom";
 import { Box, Fade } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
@@ -17,6 +17,7 @@ import PlayerList from "./PlayerList/PlayerList";
 import gameService from "../services/gameService";
 import PropTypes from "prop-types";
 import { Socket } from "socket.io-client";
+
 
 class GameUI extends React.Component {
   static propTypes = {
@@ -37,7 +38,9 @@ class GameUI extends React.Component {
           deck: []
         },
         players: [],
-        cardPile: [],
+        cardPile: [
+          {color: 'red', value:'+2'}
+        ],
         timer: 0,
         activeUid: null,
 
@@ -82,11 +85,20 @@ class GameUI extends React.Component {
     }, 5000);
   }
 
+  playCard(idx) {
+    const card = this.state.gameState.my.deck[idx];
+    gameService.playCard(card);
+  }
+
+  drawCards() {
+    gameService.drawCards();
+  }
+
   render() {
     return (
       <ThemeProvider theme={gameTheme}>
         <Box>
-          <Box id="game-alerts">
+          <Box id="game-alerts" style={{zIndex: 100}}>
             <Fade in={this.state.displayError}>
               <Alert variant="standard" severity="error">
                 {this.state.lastError}
@@ -108,7 +120,10 @@ class GameUI extends React.Component {
               top="2em"
               left="calc(50% - 20em/2)"
             >
-              <CardPile cards={this.state.gameState.cardPile}></CardPile>
+              <CardPile cards={this.state.gameState.cardPile} myUid={this.state.gameState.my.uid}></CardPile>
+              <ColorPrompt active={true} onChoice={(color) => {
+                alert("you chose " + color)
+              }}/>
             </Box>
             <Box
               position="absolute"
@@ -118,7 +133,7 @@ class GameUI extends React.Component {
             >
               <Deck
                 cards={this.state.gameState.my.deck}
-                playCard={(idx) => {}}
+                playCard={this.playCard.bind(this)}
                 inactive={!this.state.gameState.my.turn}
               ></Deck>
             </Box>
@@ -132,6 +147,7 @@ class GameUI extends React.Component {
             >
               <DrawCard
                 inactive={!this.state.gameState.my.turn}
+                onDraw={this.drawCards.bind(this)}
               ></DrawCard>
             </Box>
           </Box>

@@ -34,6 +34,7 @@ const Deck = (props) => {
     copy.play();
 
     if (!props.inactive && selectedCard != null) {
+      console.log(props.playCard);
       props.playCard(selectedCard);
       setSelectedCard(null);
     }
@@ -82,6 +83,7 @@ const Deck = (props) => {
               onMouseEnter={cardMouseEnterFn.bind(this, i)}
               selected={i === selectedCard}
               onClick={cardClickFn}
+              topCard={i === props.cards.length - 1}
               key={i}
             ></Card>
           ))}
