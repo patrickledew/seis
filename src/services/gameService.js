@@ -3,8 +3,8 @@
  **/
 export default (() => {
   /**
-  * Variables for storing information about the current game.
-  */
+   * Variables for storing information about the current game.
+   */
   let socket = null;
   let gameState = null;
 
@@ -14,8 +14,8 @@ export default (() => {
 
   function ready() {
     console.log("socket:", socket);
-    if (!socket) { 
-      handlers.onError("No socket bound to game service."); 
+    if (!socket) {
+      handlers.onError("No socket bound to game service.");
       return;
     }
 
@@ -24,12 +24,13 @@ export default (() => {
     socket.emit("ready"); // Tell server that we're ready
   }
   /**
-  * Callback functions for when the lobby sends us messages. Overwrite these to update the state of frontend components. (e.g. lobbySocket.handlers.onError = ...)
-  */
+   * Callback functions for when the lobby sends us messages. Overwrite these to update the state of frontend components. (e.g. lobbySocket.handlers.onError = ...)
+   */
   const handlers = {
     onUpdate: (state) => {}, // Called when lobby sends us state information (currently connected players, lobby settings, etc.)
     onCardDealt: (uid) => {},
     onCardRecieved: (card) => {},
+    onColorPrompt: () => {},
     onError: (e) => console.error("[Game Error]", e), // Called when there is an error related to the lobby socket. (Client gets kicked, socket connection gets interrupted, etc.)
   };
 
@@ -38,11 +39,15 @@ export default (() => {
   }
 
   function playCard(card) {
-    socket.emit('play-card', card);
+    socket.emit("play-card", card);
   }
 
   function drawCards() {
-    socket.emit('draw-cards');
+    socket.emit("draw-cards");
+  }
+
+  function chooseColor(color) {
+    socket.emit("card-color", color);
   }
 
   function startListeners() {
@@ -59,7 +64,10 @@ export default (() => {
       } else {
         handlers.onCardRecieved(card);
       }
-    })
+    });
+    socket.on("choose-color", () => {
+      handlers.onColorPrompt();
+    });
   }
 
   function stopListeners() {
@@ -79,6 +87,7 @@ export default (() => {
     stopListeners: stopListeners,
     playCard: playCard,
     drawCards: drawCards,
+    chooseColor: chooseColor,
 
     _getSocket: () => {
       return socket;

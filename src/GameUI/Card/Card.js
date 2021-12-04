@@ -34,7 +34,7 @@ const Card = (props) => {
         (props.position ? props.position : "") +
         " " +
         (props.topCard ? "topcard" : "") +
-        " " + 
+        " " +
         (props.playedByOpponent ? "opponent" : "")
       }
       ref={animation.ref}
@@ -60,7 +60,7 @@ Card.propTypes = {
   onMouseEnter: PropTypes.func,
   onClick: PropTypes.func,
   animateUnmount: PropTypes.bool,
-  playedByOpponent: PropTypes.bool
+  playedByOpponent: PropTypes.bool,
 };
 
 export default Card;

@@ -18,12 +18,10 @@ import gameService from "../services/gameService";
 import PropTypes from "prop-types";
 import { Socket } from "socket.io-client";
 
-
 class GameUI extends React.Component {
   static propTypes = {
-    io: PropTypes.instanceOf(Socket).isRequired
+    io: PropTypes.instanceOf(Socket).isRequired,
   };
-
 
   constructor(props) {
     super(props);
@@ -35,23 +33,21 @@ class GameUI extends React.Component {
         my: {
           turn: false,
           uid: null,
-          deck: []
+          deck: [],
         },
         players: [],
-        cardPile: [
-          {color: 'red', value:'+2'}
-        ],
+        cardPile: [{ color: "red", value: "+2" }],
         timer: 0,
         activeUid: null,
-
       },
+      colorPrompt: false,
       displayError: false,
-      lastError: ""
+      lastError: "",
     };
   }
 
   getPlayer(uid) {
-    return this.state.gameState.players.find(p => p.uid === uid)
+    return this.state.gameState.players.find((p) => p.uid === uid);
   }
 
   getActivePlayer() {
@@ -62,17 +58,20 @@ class GameUI extends React.Component {
     gameService.handlers.onError = (e) => {
       console.error("[Game Error]", e);
       this.showError(e);
-    }
+    };
     gameService.handlers.onUpdate = (state) => {
       this.setState({ gameState: state });
-    }
+    };
+    gameService.handlers.onColorPrompt = () => {
+      this.setState({ colorPrompt: true });
+    };
   }
 
   componentDidMount() {
     this.setupHandlers();
     gameService.ready();
   }
-  
+
   showError(e) {
     this.setState({
       displayError: true,
@@ -98,7 +97,7 @@ class GameUI extends React.Component {
     return (
       <ThemeProvider theme={gameTheme}>
         <Box>
-          <Box id="game-alerts" style={{zIndex: 100}}>
+          <Box id="game-alerts" style={{ zIndex: 100 }}>
             <Fade in={this.state.displayError}>
               <Alert variant="standard" severity="error">
                 {this.state.lastError}
@@ -107,7 +106,12 @@ class GameUI extends React.Component {
           </Box>
           <Prompt message="Game in progress. Are you sure you want to leave?"></Prompt>
           <GameNavbar></GameNavbar>
-          <Box display="flex" flexDirection="column" class="fullHeight" id="game">
+          <Box
+            display="flex"
+            flexDirection="column"
+            class="fullHeight"
+            id="game"
+          >
             <Box width="30em">
               <PlayerList
                 players={this.state.gameState.players}
@@ -120,10 +124,19 @@ class GameUI extends React.Component {
               top="2em"
               left="calc(50% - 20em/2)"
             >
-              <CardPile cards={this.state.gameState.cardPile} myUid={this.state.gameState.my.uid}></CardPile>
-              <ColorPrompt active={true} onChoice={(color) => {
-                alert("you chose " + color)
-              }}/>
+              <CardPile
+                cards={this.state.gameState.cardPile}
+                myUid={this.state.gameState.my.uid}
+              ></CardPile>
+              <ColorPrompt
+                active={this.state.colorPrompt}
+                onChoice={(color) => {
+                  gameService.chooseColor(color);
+                  setTimeout(() => {
+                    this.setState({ colorPrompt: false });
+                  }, 500);
+                }}
+              />
             </Box>
             <Box
               position="absolute"

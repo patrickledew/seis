@@ -26,8 +26,6 @@ class Lobby extends React.Component {
   constructor(props) {
     super(props);
 
-
-
     this.state = {
       username: null,
       lobbyExists: null,
@@ -144,40 +142,41 @@ class Lobby extends React.Component {
     console.log(this.state.lobbyState);
     if (this.state.lobbyState && this.state.lobbyState.inProgress) {
       return <GameUI io={lobbyService._getSocket()}></GameUI>;
-    }
-    else return (
-      <Box className="lobby">
-        <Box className="lobbyBackground"></Box>
-        <Box id="lobby-alerts">
-          <Fade in={this.state.displayError}>
-            <Alert variant="standard" severity="error">
-              {this.state.lastError}
-            </Alert>
-          </Fade>
-        </Box>
-        {!this.state.lobbyExists ? (
-          <LobbyNotFound
-            lobbyId={this.state.lobbyId}
-            showError={this.showError.bind(this)}
-          />
-        ) : !this.state.joined ? (
-          <LobbyJoinMenu
-            lobbyId={this.state.lobbyId}
-            showError={this.showError.bind(this)}
-            joinLobby={this.joinLobby.bind(this)}
-          />
-        ) : this.state.lobbyState && (
-            <LobbyMain
+    } else
+      return (
+        <Box className="lobby">
+          <Box className="lobbyBackground"></Box>
+          <Box id="lobby-alerts">
+            <Fade in={this.state.displayError}>
+              <Alert variant="standard" severity="error">
+                {this.state.lastError}
+              </Alert>
+            </Fade>
+          </Box>
+          {!this.state.lobbyExists ? (
+            <LobbyNotFound
               lobbyId={this.state.lobbyId}
-              lobbyState={this.state.lobbyState}
-              myId={this.state.myId}
               showError={this.showError.bind(this)}
-              lobbyService={lobbyService}
             />
-          )
-        }
-      </Box>
-    );
+          ) : !this.state.joined ? (
+            <LobbyJoinMenu
+              lobbyId={this.state.lobbyId}
+              showError={this.showError.bind(this)}
+              joinLobby={this.joinLobby.bind(this)}
+            />
+          ) : (
+            this.state.lobbyState && (
+              <LobbyMain
+                lobbyId={this.state.lobbyId}
+                lobbyState={this.state.lobbyState}
+                myId={this.state.myId}
+                showError={this.showError.bind(this)}
+                lobbyService={lobbyService}
+              />
+            )
+          )}
+        </Box>
+      );
   }
 }
 

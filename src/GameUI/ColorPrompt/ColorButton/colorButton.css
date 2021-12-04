@@ -1,34 +1,33 @@
 .colorButton {
-    position: absolute;
-    width: 4.2em;
-    border-radius: 10px;
-    padding: 10px;
-    z-index: 100;
-    box-shadow: 2px 2px 4px black;
-    cursor: default;
-    transition: transform 0.2s ease;
+  position: absolute;
+  width: 4.2em;
+  border-radius: 10px;
+  padding: 10px;
+  z-index: 100;
+  box-shadow: 2px 2px 4px black;
+  cursor: default;
+  transition: transform 0.2s ease;
 }
 
 .colorButton:hover {
-    filter: brightness(1.3);
-    cursor: pointer;
-    transform: scale(1.2);
+  filter: brightness(1.3);
+  cursor: pointer;
+  transform: scale(1.2);
 }
-    
+
 .colorButton-red {
-    background: linear-gradient(to top right, #c7201d, #e35d5b);
+  background: linear-gradient(to top right, #c7201d, #e35d5b);
 }
 .colorButton-blue {
-    background: linear-gradient(to top right, #00d2ff, #3a7bd5);
+  background: linear-gradient(to top right, #00d2ff, #3a7bd5);
 }
 .colorButton-green {
-    background: linear-gradient(
-        to top right,
-        #348f50,
-        #6fd356
-      ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  
+  background: linear-gradient(
+    to top right,
+    #348f50,
+    #6fd356
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 .colorButton-yellow {
-    background: linear-gradient(to top right, #e9b014, #f3cd35);
+  background: linear-gradient(to top right, #e9b014, #f3cd35);
 }

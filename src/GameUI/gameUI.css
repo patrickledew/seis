@@ -1,7 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap");
 
+html {
+  overflow: hidden;
+}
+
 #game {
-  overflow-y: hidden;
   padding-top: 5em;
   background-color: #222222;
   box-sizing: border-box;
