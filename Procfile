@@ -1,1 +1,1 @@
-web: npx serve build --spa
+web: npx ws build --spa
