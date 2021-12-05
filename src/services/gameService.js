@@ -28,9 +28,10 @@ export default (() => {
    */
   const handlers = {
     onUpdate: (state) => {}, // Called when lobby sends us state information (currently connected players, lobby settings, etc.)
-    onCardDealt: (uid) => {},
-    onCardRecieved: (card) => {},
+    onCardDealt: () => {},
+    onCardRecieved: () => {},
     onColorPrompt: () => {},
+    onTimerTick: (currentTime) => {},
     onError: (e) => console.error("[Game Error]", e), // Called when there is an error related to the lobby socket. (Client gets kicked, socket connection gets interrupted, etc.)
   };
 
@@ -58,16 +59,19 @@ export default (() => {
       gameState = state;
       handlers.onUpdate(state);
     });
-    socket.on("deal-card", (uid, card) => {
-      if (card === null) {
-        handlers.onCardDealt(uid);
+    socket.on("deal-card", (uid) => {
+      if (uid === gameState.my.uid) {
+        handlers.onCardDealt();
       } else {
-        handlers.onCardRecieved(card);
+        handlers.onCardRecieved();
       }
     });
     socket.on("choose-color", () => {
       handlers.onColorPrompt();
     });
+    socket.on("timer", (seconds) => {
+      handlers.onTimerTick(seconds);
+    })
   }
 
   function stopListeners() {
@@ -75,6 +79,9 @@ export default (() => {
       socket.removeAllListeners("error");
       socket.removeAllListeners("game-state");
       socket.removeAllListeners("deal-card");
+      socket.removeAllListeners("game-error");
+      socket.removeAllListeners("choose-color");
+      socket.removeAllListeners("timer");
     }
   }
 

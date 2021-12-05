@@ -43,7 +43,10 @@ class GameUI extends React.Component {
       colorPrompt: false,
       displayError: false,
       lastError: "",
+      timerTickSound: new Audio("/sounds/tick.mp3"),
+      cardDrawSound: new Audio("/sounds/card.mp3")
     };
+    
   }
 
   getPlayer(uid) {
@@ -65,11 +68,28 @@ class GameUI extends React.Component {
     gameService.handlers.onColorPrompt = () => {
       this.setState({ colorPrompt: true });
     };
+    gameService.handlers.onTimerTick = (seconds) => {
+      console.log("tick");
+      this.state.timerTickSound.play();
+      this.setState({gameState: {...this.state.gameState, timer: seconds}})
+    };
+    gameService.handlers.onCardRecieved = () => {
+      this.state.cardDrawSound.play();
+    };
+    
+    gameService.handlers.onCardDealt = () => {
+      this.state.cardDrawSound.play();
+    }
   }
 
   componentDidMount() {
     this.setupHandlers();
     gameService.ready();
+    this.state.timerTickSound.load();
+  }
+
+  componentWillUnmount() {
+    gameService.stopListeners();
   }
 
   showError(e) {
@@ -115,7 +135,7 @@ class GameUI extends React.Component {
             <Box width="30em">
               <PlayerList
                 players={this.state.gameState.players}
-                reversed={this.state.gameState.reversed}
+                reversed={this.state.gameState.direction !== 'down'}
               ></PlayerList>
             </Box>
             <Box
