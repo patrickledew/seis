@@ -19,6 +19,10 @@
     "use-animate-presence": "^0.5.2",
     "web-vitals": "^1.1.2"
   },
+  "engines": {
+    "node": "12.16.2",
+    "npm": "7.19.1"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
