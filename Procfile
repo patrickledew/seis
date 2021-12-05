@@ -1,1 +1,1 @@
-web: npx pm2 serve build --spa
+web: npx serve build --spa
