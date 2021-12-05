@@ -1,1 +1,1 @@
-web: npx ws build --spa
+web: cd build && npx ws --spa index.html
