@@ -6,6 +6,11 @@
   height: 18em;
   justify-self: center;
 }
+@keyframes slidein-left {
+  from {
+    transform: translateX(-30em);
+  }
+}
 @keyframes slidein {
   from {
     transform: translateY(30em);
@@ -14,4 +19,9 @@
 .cardpile .card.topcard {
   z-index: 20;
   animation: slidein 0.5s;
+}
+
+.cardpile .card.topcard.opponent {
+  z-index: 20;
+  animation: slidein-left 0.5s;
 }

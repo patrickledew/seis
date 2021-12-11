@@ -9,6 +9,7 @@
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "local-web-server": "^5.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router": "^5.2.0",
@@ -18,6 +19,10 @@
     "socket.io-client": "^4.1.1",
     "use-animate-presence": "^0.5.2",
     "web-vitals": "^1.1.2"
+  },
+  "engines": {
+    "node": "16.13.1",
+    "npm": "7.19.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -54,6 +59,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-react": "^7.24.0",
-    "prettier": "2.3.1"
+    "prettier": "2.3.1",
+    "serve": "^13.0.2"
   }
 }

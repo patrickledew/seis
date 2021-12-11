@@ -11,7 +11,6 @@ const GameTimer = (props) => {
 
   return (
     <Box
-      height="5em"
       className={
         "gameTimer centerText" + (props.seconds < 10 ? " runningOut" : "")
       }

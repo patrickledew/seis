@@ -3,9 +3,11 @@ import Deck from "./Deck/Deck";
 import CardPile from "./CardPile/CardPile";
 import GameNavbar from "./GameNavbar/GameNavbar";
 import GameTimer from "./GameTimer/GameTimer";
-
+import ColorPrompt from "./ColorPrompt/ColorPrompt";
+import EndScreen from "./EndScreen/EndScreen";
 import { Prompt } from "react-router-dom";
-import { Box } from "@material-ui/core";
+import { Box, Fade } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import { ThemeProvider } from "@material-ui/core/styles";
 import gameTheme from "./theme/Theme";
 
@@ -13,128 +15,138 @@ import "./gameUI.css";
 import DrawCard from "./DrawCard/DrawCard";
 import PlayerList from "./PlayerList/PlayerList";
 
+import gameService from "../services/gameService";
+import PropTypes from "prop-types";
+import { Socket } from "socket.io-client";
+import StackCounter from "./StackCounter/StackCounter";
+
 class GameUI extends React.Component {
+  static propTypes = {
+    io: PropTypes.instanceOf(Socket).isRequired,
+  };
+
   constructor(props) {
     super(props);
+
+    gameService.bindSocket(props.io);
+
     this.state = {
-      interval: null,
       gameState: {
-        reversed: false,
-        secondsLeft: 5,
-        myDeck: [
-          { color: "red", value: "5" },
-          { color: "yellow", value: "+2" },
-          { color: "blue", value: "5" },
-          { color: "yellow", value: "+2" },
-          { color: "green", value: "5" },
-          { color: "green", value: "+2" },
-          { color: "red", value: "5" },
-          { color: "blue", value: "+2" },
-          { color: "green", value: "5" },
-          { color: "green", value: "+2" },
-          { color: null, value: "W" },
-          { color: "blue", value: "+2" },
-          { color: "blue", value: "+2" },
-          { color: "blue", value: "+2" },
-          { color: "blue", value: "+2" },
-          { color: "red", value: "5" },
-          { color: "yellow", value: "+2" },
-          { color: "blue", value: "5" },
-          { color: "yellow", value: "+2" },
-          { color: "green", value: "5" },
-        ],
-        cardPile: [{ color: null, value: "W" }],
-        currentPlayerIdx: 0,
-        players: [
-          {
-            name: "Ricky",
-            numCards: 20,
-            active: true,
-          },
-          {
-            name: "JTrops",
-            numCards: 5,
-            active: false,
-          },
-          {
-            name: "Chowder",
-            numCards: 69,
-            active: false,
-          },
-          {
-            name: "Tomas",
-            numCards: 12,
-            active: false,
-          },
-          {
-            name: "8092",
-            numCards: 3000,
-            active: false,
-          },
-          {
-            name: "bogus",
-            numCards: 2,
-            active: false,
-          },
-          {
-            name: "Hoodie",
-            numCards: 10,
-            active: false,
-          },
-          {
-            name: "Churrizo",
-            numCards: 8,
-            active: false,
-          },
-          {
-            name: "A Really Long Name :) Like seriously tho we should check that names this long aren't allowed cuz it'll probably break the UI",
-            numCards: 2,
-            active: false,
-          },
-        ],
+        my: {
+          turn: false,
+          uid: null,
+          deck: [],
+          deckIsActive: false
+        },
+        players: [],
+        cardPile: [{ color: "red", value: "+2" }],
+        timer: 0,
+        activeUid: null,
+        phase: "inprogress",
+        winner: null
       },
+      colorPrompt: false,
+      displayError: false,
+      lastError: "",
+      timerTickSound: new Audio("/sounds/tick.mp3"),
+      cardDrawSound: new Audio("/sounds/card.mp3")
     };
+    
+  }
+
+  getPlayer(uid) {
+    return this.state.gameState.players.find((p) => p.uid === uid);
+  }
+
+  getActivePlayer() {
+    return this.getPlayer(this.state.gameState.activeUid);
+  }
+
+  setupHandlers() {
+    gameService.handlers.onError = (e) => {
+      console.error("[Game Error]", e);
+      this.showError(e);
+    };
+    gameService.handlers.onUpdate = (state) => {
+      this.setState({ gameState: state });
+    };
+    gameService.handlers.onColorPrompt = () => {
+      this.setState({ colorPrompt: true });
+    };
+    gameService.handlers.onTimerTick = (seconds) => {
+      console.log("tick");
+      this.state.timerTickSound.play();
+      this.setState({gameState: {...this.state.gameState, timer: seconds}})
+    };
+    gameService.handlers.onCardRecieved = () => {
+      console.log("Recieved Card");
+      this.setState({drawing: true});
+      setTimeout( () => {
+        this.setState({drawing: false});
+      }, 200);
+      this.state.cardDrawSound.play();
+    };
+    
+    gameService.handlers.onCardDealt = () => {
+      this.state.cardDrawSound.play();
+    }
   }
 
   componentDidMount() {
-    this.setState({
-      interval: setInterval(() => {
-        if (this.state.gameState.secondsLeft > 0) {
-          const gameStateCpy = this.state.gameState;
-          gameStateCpy.secondsLeft--;
-          this.setState({ gameState: gameStateCpy });
-        } else {
-          this.nextTurn();
-        }
-      }, 1000),
-    });
+    this.setupHandlers();
+    gameService.ready();
+    this.state.timerTickSound.load();
   }
 
-  nextTurn() {
-    const gameStateCpy = this.state.gameState;
-    gameStateCpy.players[gameStateCpy.currentPlayerIdx].active = false;
+  componentWillUnmount() {
+    gameService.stopListeners();
+  }
 
-    if (gameStateCpy.currentPlayerIdx === gameStateCpy.players.length - 1) {
-      gameStateCpy.currentPlayerIdx = 0;
-    } else {
-      gameStateCpy.currentPlayerIdx++;
-    }
-    gameStateCpy.players[gameStateCpy.currentPlayerIdx].active = true;
-    gameStateCpy.secondsLeft = 5;
-    this.setState({ gameState: gameStateCpy });
+  showError(e) {
+    this.setState({
+      displayError: true,
+      lastError: e,
+    });
+    setTimeout(() => {
+      this.setState({
+        displayError: false,
+      });
+    }, 5000);
+  }
+
+  playCard(idx) {
+    const card = this.state.gameState.my.deck[idx];
+    gameService.playCard(card);
+  }
+
+  drawCards() {
+    gameService.drawCards();
   }
 
   render() {
     return (
       <ThemeProvider theme={gameTheme}>
         <Box>
+          <Box id="game-alerts" style={{ zIndex: 100 }}>
+            <Fade in={this.state.displayError}>
+              <Alert variant="standard" severity="error">
+                {this.state.lastError}
+              </Alert>
+            </Fade>
+          </Box>
           <Prompt message="Game in progress. Are you sure you want to leave?"></Prompt>
           <GameNavbar></GameNavbar>
-          <Box display="flex" className="fullWidth fullHeight" id="game">
+          <Box
+            display="flex"
+            flexDirection="column"
+            class="fullHeight"
+            id="game"
+          >
+            {this.state.gameState.phase === "over" && <EndScreen winner={this.getPlayer(this.state.gameState.winner)} timeLeft={this.state.gameState.timer} winnerIdx={this.state.gameState.players.findIndex((p) => (p === this.getPlayer(this.state.gameState.winner)))}></EndScreen>}
             <Box width="30em">
               <PlayerList
                 players={this.state.gameState.players}
-                reversed={this.state.gameState.reversed}
+                reversed={this.state.gameState.direction !== 'down'}
               ></PlayerList>
             </Box>
             <Box
@@ -143,7 +155,19 @@ class GameUI extends React.Component {
               top="2em"
               left="calc(50% - 20em/2)"
             >
-              <CardPile cards={this.state.gameState.cardPile}></CardPile>
+              <CardPile
+                cards={this.state.gameState.cardPile}
+                myUid={this.state.gameState.my.uid}
+              ></CardPile>
+              <ColorPrompt
+                active={this.state.colorPrompt}
+                onChoice={(color) => {
+                  gameService.chooseColor(color);
+                  setTimeout(() => {
+                    this.setState({ colorPrompt: false });
+                  }, 500);
+                }}
+              />
             </Box>
             <Box
               position="absolute"
@@ -152,22 +176,16 @@ class GameUI extends React.Component {
               width="calc(max(100% - (20em * 2), 30em))"
             >
               <Deck
-                cards={this.state.gameState.myDeck}
-                playCard={(idx) => {
-                  const gameStateCpy = this.state.gameState;
-                  const theCard = gameStateCpy.myDeck.splice(idx, 1);
-                  gameStateCpy.players[0].numCards -= 1;
-                  gameStateCpy.cardPile = gameStateCpy.cardPile.concat(theCard);
-                  this.setState({
-                    gameState: gameStateCpy,
-                  });
-                  this.nextTurn();
-                }}
-                inactive={this.state.gameState.currentPlayerIdx !== 0}
+                cards={this.state.gameState.my.deck}
+                playCard={this.playCard.bind(this)}
+                inactive={!this.state.gameState.my.deckIsActive}
+                drawing={this.state.drawing}
+                topCard={this.state.gameState.cardPile.at(-1)}
               ></Deck>
             </Box>
-            <Box display="flex" flexDirection="column" width="20em" ml="auto">
-              <GameTimer seconds={this.state.gameState.secondsLeft}></GameTimer>
+            <Box width="20em" ml="auto">
+              <GameTimer seconds={this.state.gameState.timer}></GameTimer>
+              <StackCounter count={this.state.gameState.stackCounter}></StackCounter>
             </Box>
             <Box
               position="absolute"
@@ -175,7 +193,8 @@ class GameUI extends React.Component {
               right="calc(var(--card-size-factor) * 10em + 3em)"
             >
               <DrawCard
-                inactive={this.state.gameState.currentPlayerIdx !== 0}
+                inactive={!this.state.gameState.my.turn}
+                onDraw={this.drawCards.bind(this)}
               ></DrawCard>
             </Box>
           </Box>
