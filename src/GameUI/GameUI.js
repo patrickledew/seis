@@ -17,6 +17,7 @@ import PlayerList from "./PlayerList/PlayerList";
 import gameService from "../services/gameService";
 import PropTypes from "prop-types";
 import { Socket } from "socket.io-client";
+import StackCounter from "./StackCounter/StackCounter";
 
 class GameUI extends React.Component {
   static propTypes = {
@@ -34,6 +35,7 @@ class GameUI extends React.Component {
           turn: false,
           uid: null,
           deck: [],
+          deckIsActive: false
         },
         players: [],
         cardPile: [{ color: "red", value: "+2" }],
@@ -74,6 +76,11 @@ class GameUI extends React.Component {
       this.setState({gameState: {...this.state.gameState, timer: seconds}})
     };
     gameService.handlers.onCardRecieved = () => {
+      console.log("Recieved Card");
+      this.setState({drawing: true});
+      setTimeout( () => {
+        this.setState({drawing: false});
+      }, 200);
       this.state.cardDrawSound.play();
     };
     
@@ -167,11 +174,14 @@ class GameUI extends React.Component {
               <Deck
                 cards={this.state.gameState.my.deck}
                 playCard={this.playCard.bind(this)}
-                inactive={!this.state.gameState.my.turn}
+                inactive={!this.state.gameState.my.deckIsActive}
+                drawing={this.state.drawing}
+                topCard={this.state.gameState.cardPile.at(-1)}
               ></Deck>
             </Box>
             <Box width="20em" ml="auto">
               <GameTimer seconds={this.state.gameState.timer}></GameTimer>
+              <StackCounter count={this.state.gameState.stackCounter}></StackCounter>
             </Box>
             <Box
               position="absolute"

@@ -6,12 +6,12 @@
   height: 18em;
   justify-self: center;
 }
-@keyframes slidein {
+@keyframes slidein-left {
   from {
     transform: translateX(-30em);
   }
 }
-@keyframes slidein-left {
+@keyframes slidein {
   from {
     transform: translateY(30em);
   }

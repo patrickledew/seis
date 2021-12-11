@@ -61,9 +61,9 @@ export default (() => {
     });
     socket.on("deal-card", (uid) => {
       if (uid === gameState.my.uid) {
-        handlers.onCardDealt();
-      } else {
         handlers.onCardRecieved();
+      } else {
+        handlers.onCardDealt();
       }
     });
     socket.on("choose-color", () => {

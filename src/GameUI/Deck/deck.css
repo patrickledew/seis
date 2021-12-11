@@ -18,6 +18,6 @@
     transform: translateX(30em);
   }
 }
-.deck .card.topcard {
+.deck.drawing .card:last-child {
   animation: slideinfromright 0.1s;
 }
