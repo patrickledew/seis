@@ -4,6 +4,7 @@ import CardPile from "./CardPile/CardPile";
 import GameNavbar from "./GameNavbar/GameNavbar";
 import GameTimer from "./GameTimer/GameTimer";
 import ColorPrompt from "./ColorPrompt/ColorPrompt";
+import EndScreen from "./EndScreen/EndScreen";
 import { Prompt } from "react-router-dom";
 import { Box, Fade } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
@@ -41,6 +42,8 @@ class GameUI extends React.Component {
         cardPile: [{ color: "red", value: "+2" }],
         timer: 0,
         activeUid: null,
+        phase: "inprogress",
+        winner: null
       },
       colorPrompt: false,
       displayError: false,
@@ -139,6 +142,7 @@ class GameUI extends React.Component {
             class="fullHeight"
             id="game"
           >
+            {this.state.gameState.phase === "over" && <EndScreen winner={this.getPlayer(this.state.gameState.winner)} timeLeft={this.state.gameState.timer} winnerIdx={this.state.gameState.players.findIndex((p) => (p === this.getPlayer(this.state.gameState.winner)))}></EndScreen>}
             <Box width="30em">
               <PlayerList
                 players={this.state.gameState.players}
