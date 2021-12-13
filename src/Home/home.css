@@ -1,0 +1,37 @@
+#home {
+    background-color: #1b1b1b;
+    height: 100vh;
+}
+
+.landing {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.landing .logo {
+    height: 10em;
+    margin-bottom: 5em;
+}
+
+.landing .buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.landing .buttons button {
+    font-size: 2em;
+    margin: 10px;
+}
+.landing .buttons caption {
+    font-size: 2em;
+}
+
+.landing .buttons .joinGroup {
+    display: flex;
+    align-items: center;
+}

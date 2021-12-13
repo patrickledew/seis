@@ -1,0 +1,33 @@
+.navbar {
+    width: 100%;
+    background-color: #2C2C2C;
+    display: flex;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    list-style: none;
+    text-decoration: none;
+    padding: 0;
+}
+.navbar li:not(:last-child) {
+    flex: 1;
+    margin-right: 40px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #B4B4B4
+}
+
+.navbar a.active, .navbar a:hover {
+    color: white;
+}
+

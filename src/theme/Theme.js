@@ -1,10 +1,17 @@
-import { createMuiTheme } from "@material-ui/core/styles";
-import { lightBlue } from "@material-ui/core/colors";
+import { createTheme } from "@material-ui/core/styles";
+import { deepPurple, yellow } from "@material-ui/core/colors";
 
-const Theme = createMuiTheme({
+const Theme = createTheme({
   palette: {
     type: "dark",
-    primary: lightBlue,
+    primary: deepPurple,
+    secondary: yellow
+  },
+  typography: {
+    allVariants: {
+      fontFamily: "Patrick Hand, Segoe UI",
+      textTransform: "none"
+    },
   },
 });
 export default Theme;
