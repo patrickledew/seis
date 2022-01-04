@@ -33,12 +33,14 @@ const PlayerInfo = (props) => {
           {props.player.name}
         </Typography>
       </div>
-      {(props.displayCards === undefined || props.displayCards) && <div className="cardCount">
-        <img src={GrayscaleCardIcon} className="cardIcon"></img>
-        <Typography variant="h5" color="textSecondary" display="inline">
-          {props.player.numCards}
-        </Typography>
-      </div>}
+      {(props.displayCards === undefined || props.displayCards) && (
+        <div className="cardCount">
+          <img src={GrayscaleCardIcon} className="cardIcon"></img>
+          <Typography variant="h5" color="textSecondary" display="inline">
+            {props.player.numCards}
+          </Typography>
+        </div>
+      )}
     </div>
   );
 };
@@ -48,7 +50,7 @@ PlayerInfo.propTypes = {
   player: PropTypes.object,
   colorIndex: PropTypes.number.isRequired,
   active: PropTypes.bool,
-  displayCards: PropTypes.bool
+  displayCards: PropTypes.bool,
 };
 
 export default PlayerInfo;

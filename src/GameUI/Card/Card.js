@@ -17,24 +17,28 @@ const Card = (props) => {
   return (
     <div
       id={props.idx !== undefined ? `card-${props.idx}` : null}
-      className={
-        `card 
+      className={`card 
         ${
           props.color === "red"
-          ? "card-red"
-          : props.color === "blue"
-          ? "card-blue"
-          : props.color === "green"
-          ? "card-green"
-          : props.color === "yellow"
-          ? "card-yellow"
-          : "card-wildcard"
+            ? "card-red"
+            : props.color === "blue"
+            ? "card-blue"
+            : props.color === "green"
+            ? "card-green"
+            : props.color === "yellow"
+            ? "card-yellow"
+            : "card-wildcard"
         }
         ${props.selected ? "selected" : ""}
         ${props.topCard ? "topcard" : ""}
         ${props.playedByOpponent ? "opponent" : ""}
-        ${props.canPlay !== undefined ? (props.canPlay === true ? "" : "invalid") : ""}`
-      }
+        ${
+          props.canPlay !== undefined
+            ? props.canPlay === true
+              ? ""
+              : "invalid"
+            : ""
+        }`}
       ref={animation.ref}
       style={props.cardStyle}
       onMouseEnter={props.onMouseEnter}
