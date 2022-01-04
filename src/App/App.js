@@ -5,7 +5,7 @@ import Lobby from "../Lobby/Lobby";
 import FourOhFour from "../404/404";
 import LoginPage from "../LoginPage/LoginPage";
 import Navbar from "../Navbar/Navbar";
-import About from "../About/About"
+import About from "../About/About";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Theme from "../theme/Theme";
@@ -15,9 +15,8 @@ function App() {
   return (
     <ThemeProvider theme={Theme}>
       <div className="App">
-        
         <BrowserRouter>
-        <Navbar></Navbar>
+          <Navbar></Navbar>
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/about" component={About} />

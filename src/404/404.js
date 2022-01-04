@@ -8,10 +8,11 @@ const FourOhFour = (props) => {
     <div className="content">
       <Typography variant="h3" color="textSecondary" align="center">
         This page does not exist!
-        </Typography>
-        <br></br>
-        <Typography variant="h5" color="textSecondary" align="center">Return to the homepage <Link to="/">here.</Link></Typography>
-      
+      </Typography>
+      <br></br>
+      <Typography variant="h5" color="textSecondary" align="center">
+        Return to the homepage <Link to="/">here.</Link>
+      </Typography>
     </div>
   );
 };

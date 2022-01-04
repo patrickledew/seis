@@ -18,14 +18,14 @@
 }
 
 .content {
-    background-color: #1b1b1b;
-    height: 100vh;
-    padding: 10em 30%;
-    overflow-y: scroll;
+  background-color: #1b1b1b;
+  height: 100vh;
+  padding: 10em 30%;
+  overflow-y: scroll;
 }
 @media (max-width: 1000px) {
- .content {
-   padding: 10em 5em;
-   overflow-y: scroll;
- }   
+  .content {
+    padding: 10em 5em;
+    overflow-y: scroll;
+  }
 }

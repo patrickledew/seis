@@ -15,11 +15,10 @@ const Deck = (props) => {
     cardSound.load();
     cardPlaySound.src = "/sounds/card2.mp3";
     cardPlaySound.load();
-    cardErrSound.src = "/sounds/error.mp3"
+    cardErrSound.src = "/sounds/error.mp3";
     cardErrSound.load();
   }, [cardSound, cardPlaySound, cardErrSound]);
 
-  
   const cardMouseEnterFn = (cardIdx) => {
     const copy = cardSound.cloneNode(true);
     copy.mozPreservesPitch = false;
@@ -32,9 +31,12 @@ const Deck = (props) => {
 
   const cardClickFn = (e) => {
     console.log("cardclick e: ", e);
-    
 
-    if (!props.inactive && selectedCard != null && isValidCard(props.cards[selectedCard])) {
+    if (
+      !props.inactive &&
+      selectedCard != null &&
+      isValidCard(props.cards[selectedCard])
+    ) {
       const copy = cardPlaySound.cloneNode(true);
       copy.mozPreservesPitch = false;
       copy.playbackRate = Math.random() / 5 + 1;
@@ -73,7 +75,7 @@ const Deck = (props) => {
     } else {
       return false;
     }
-  }
+  };
 
   return (
     <div className="mydeck">
@@ -115,7 +117,7 @@ Deck.propTypes = {
   highlight: PropTypes.bool,
   playCard: PropTypes.func,
   drawing: PropTypes.bool,
-  topCard: PropTypes.object
+  topCard: PropTypes.object,
 };
 
 export default Deck;

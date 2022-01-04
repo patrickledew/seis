@@ -1,33 +1,32 @@
-
 .landing {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .landing .logo {
-    height: 10em;
-    margin-bottom: 5em;
+  height: 10em;
+  margin-bottom: 5em;
 }
 
 .landing .buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .landing .buttons button {
-    font-size: 2em;
-    margin: 10px;
+  font-size: 2em;
+  margin: 10px;
 }
 .landing .buttons caption {
-    font-size: 2em;
+  font-size: 2em;
 }
 
 .landing .buttons .joinGroup {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }

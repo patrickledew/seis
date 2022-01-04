@@ -52,7 +52,8 @@
   color: #ffffff;
 }
 
-.inactive .card, .card.invalid {
+.inactive .card,
+.card.invalid {
   filter: brightness(0.7) saturate(0.8);
   cursor: default !important;
 }
@@ -70,9 +71,8 @@
   transform: translate(calc(-3em * var(--card-size-factor)), 1em) rotate(-2deg);
 }
 
-
 /* Right of selected card */
-.deck > .card.selected ~ .card { 
+.deck > .card.selected ~ .card {
   transform: translate(calc(6em * var(--card-size-factor)), 1em) rotate(2deg);
 }
 
@@ -89,7 +89,8 @@
   box-shadow: #ffffff 0px 0px 10px 2px;
 }
 
-.inactive .card.selected, .card.selected.invalid {
+.inactive .card.selected,
+.card.selected.invalid {
   box-shadow: none !important;
   transform: translate(0em, -2em) !important;
 }

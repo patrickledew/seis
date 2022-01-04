@@ -36,22 +36,21 @@ class GameUI extends React.Component {
           turn: false,
           uid: null,
           deck: [],
-          deckIsActive: false
+          deckIsActive: false,
         },
         players: [],
         cardPile: [{ color: "red", value: "+2" }],
         timer: 0,
         activeUid: null,
         phase: "inprogress",
-        winner: null
+        winner: null,
       },
       colorPrompt: false,
       displayError: false,
       lastError: "",
       timerTickSound: new Audio("/sounds/tick.mp3"),
-      cardDrawSound: new Audio("/sounds/card.mp3")
+      cardDrawSound: new Audio("/sounds/card.mp3"),
     };
-    
   }
 
   getPlayer(uid) {
@@ -76,20 +75,20 @@ class GameUI extends React.Component {
     gameService.handlers.onTimerTick = (seconds) => {
       console.log("tick");
       this.state.timerTickSound.play();
-      this.setState({gameState: {...this.state.gameState, timer: seconds}})
+      this.setState({ gameState: { ...this.state.gameState, timer: seconds } });
     };
     gameService.handlers.onCardRecieved = () => {
       console.log("Recieved Card");
-      this.setState({drawing: true});
-      setTimeout( () => {
-        this.setState({drawing: false});
+      this.setState({ drawing: true });
+      setTimeout(() => {
+        this.setState({ drawing: false });
       }, 200);
       this.state.cardDrawSound.play();
     };
-    
+
     gameService.handlers.onCardDealt = () => {
       this.state.cardDrawSound.play();
-    }
+    };
   }
 
   componentDidMount() {
@@ -142,11 +141,19 @@ class GameUI extends React.Component {
             class="fullHeight"
             id="game"
           >
-            {this.state.gameState.phase === "over" && <EndScreen winner={this.getPlayer(this.state.gameState.winner)} timeLeft={this.state.gameState.timer} winnerIdx={this.state.gameState.players.findIndex((p) => (p === this.getPlayer(this.state.gameState.winner)))}></EndScreen>}
+            {this.state.gameState.phase === "over" && (
+              <EndScreen
+                winner={this.getPlayer(this.state.gameState.winner)}
+                timeLeft={this.state.gameState.timer}
+                winnerIdx={this.state.gameState.players.findIndex(
+                  (p) => p === this.getPlayer(this.state.gameState.winner)
+                )}
+              ></EndScreen>
+            )}
             <Box width="30em">
               <PlayerList
                 players={this.state.gameState.players}
-                reversed={this.state.gameState.direction !== 'down'}
+                reversed={this.state.gameState.direction !== "down"}
               ></PlayerList>
             </Box>
             <Box
@@ -185,7 +192,9 @@ class GameUI extends React.Component {
             </Box>
             <Box width="20em" ml="auto">
               <GameTimer seconds={this.state.gameState.timer}></GameTimer>
-              <StackCounter count={this.state.gameState.stackCounter}></StackCounter>
+              <StackCounter
+                count={this.state.gameState.stackCounter}
+              ></StackCounter>
             </Box>
             <Box
               position="absolute"

@@ -11,11 +11,11 @@ const Theme = createTheme({
   typography: {
     allVariants: {
       fontFamily: "Patrick Hand, Segoe UI, sans-serif",
-      textTransform: "none"
+      textTransform: "none",
     },
     body1: {
-      fontFamily: "Segoe UI, sans-serif"
-    }
+      fontFamily: "Segoe UI, sans-serif",
+    },
   },
 });
 export default Theme;

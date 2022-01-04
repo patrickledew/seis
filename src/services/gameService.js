@@ -71,7 +71,7 @@ export default (() => {
     });
     socket.on("timer", (seconds) => {
       handlers.onTimerTick(seconds);
-    })
+    });
   }
 
   function stopListeners() {
