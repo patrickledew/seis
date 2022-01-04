@@ -1,24 +1,19 @@
 import React from "react";
-import { PropTypes } from "prop-types";
-
 import { Box, Typography } from "@material-ui/core";
 import "./navbar.css";
-
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = (props) => {
+    const location = useLocation();
     return (
         <Box className="navbar">
             <ul className="navbar-nav">
-                <li><a href="/" className={props.page === "home" ? "active" : ""}><Typography variant="h4">Home</Typography></a></li>
-                <li><a href="/about" className={props.page === "about" ? "active" : ""}><Typography variant="h4">About</Typography></a></li>
-                <li><a href="/updates" className={props.page === "updates" ? "active" : ""}><Typography variant="h4">Updates</Typography></a></li>
+                <li><Link to="/" className={location.pathname === "/" ? "active" : ""}><Typography variant="h4">Home</Typography></Link></li>
+                <li><Link to="/about" className={location.pathname === "/about" ? "active" : ""}><Typography variant="h4">About</Typography></Link></li>
+                <li><Link to="/updates" className={location.pathname === "/updates" ? "active" : ""}><Typography variant="h4">Updates</Typography></Link></li>
             </ul>
         </Box>
     )
-}
-
-Navbar.propTypes = {
-    page: PropTypes.string
 }
 
 export default Navbar;

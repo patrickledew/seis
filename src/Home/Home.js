@@ -1,22 +1,21 @@
 import React, { useRef } from "react";
-import { ThemeProvider } from "@material-ui/core/styles";
 import { Button, TextField, Box, Typography } from "@material-ui/core";
-import Theme from "../theme/Theme";
 
 import "./home.css";
 import lobbyService from "../services/lobbyService";
-import Navbar from "../Navbar/Navbar";
 import Logo from "../assets/Logo-Large.svg";
+import { useHistory } from "react-router";
 const { checkIfLobbyExists, createLobby } = lobbyService;
 
 const Home = (props) => {
   const joinErrorRef = useRef();
   const createLobbyErrorRef = useRef();
   const lobbyIdInputRef = useRef();
+
+  const history = useHistory();
+
   return (
-    <ThemeProvider theme={Theme}>
-      <Navbar page="home"></Navbar>
-      <Box id="home">
+      <Box id="home" className="content">
         <Box class="landing">
           <img src={Logo} className="logo"></img>
           
@@ -29,7 +28,7 @@ const Home = (props) => {
                   checkIfLobbyExists(id)
                     .then((exists) => {
                       if (exists) {
-                        window.location.href = `/lobby/${id}`;
+                        history.push(`/lobby/${id}`); // Redirect
                       } else {
                         joinErrorRef.current.innerText =
                           "That lobby doesn't exist. Try creating a new lobby below.";
@@ -50,7 +49,7 @@ const Home = (props) => {
                   onClick={() => {
                     createLobby()
                       .then((id) => {
-                        window.location.href = `/lobby/${id}`;
+                        history.push(`/lobby/${id}`);
                       })
                       .catch((e) => {
                         createLobbyErrorRef.current.innerText =
@@ -65,7 +64,6 @@ const Home = (props) => {
           </Box>
         </Box>
       </Box>
-    </ThemeProvider>
   );
 };
 export default Home;
