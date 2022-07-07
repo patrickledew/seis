@@ -40,6 +40,8 @@ class Lobby extends React.Component {
     this.usernameInputRef = React.createRef();
 
     console.log("Running in " + process.env.NODE_ENV);
+    console.log("PROCESS ENV:" + process.env);
+    console.log("IMPORT META ENV:" + import.meta.env);
   }
 
   showError(e) {
