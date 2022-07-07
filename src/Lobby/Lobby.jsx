@@ -39,7 +39,6 @@ class Lobby extends React.Component {
     };
     this.usernameInputRef = React.createRef();
 
-    console.log("Running in " + process.env.NODE_ENV);
   }
 
   showError(e) {

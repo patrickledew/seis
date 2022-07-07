@@ -6,29 +6,18 @@
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "local-web-server": "^5.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
     "sass": "^1.35.1",
     "socket.io-client": "^4.1.1",
     "use-animate-presence": "^0.5.2",
     "web-vitals": "^1.1.2"
   },
-  "engines": {
-    "node": "16.13.1",
-    "npm": "7.19.1"
-  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "vite",
+    "build": "vite build",
     "format": "prettier --write src/.",
     "lint": "eslint --fix src/."
   },
@@ -51,7 +40,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.14.5",
     "eslint": "^7.29.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",
@@ -60,6 +48,7 @@
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-react": "^7.24.0",
     "prettier": "2.3.1",
-    "serve": "^13.0.2"
+    "@vitejs/plugin-react": "^1.1.1",
+    "vite": "^2.7.0"
   }
 }
