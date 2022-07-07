@@ -29,7 +29,8 @@ export default (() => {
   function checkIfLobbyExists(id) {
     return new Promise((resolve, reject) => {
       fetch(
-        import.meta.env.VITE_API_URL + `/api/lobbyinfo?id=${id.toUpperCase()}`
+        (import.meta.env.RAILWAY_STATIC_URL || import.meta.env.VITE_API_URL) +
+          `/api/lobbyinfo?id=${id.toUpperCase()}`
       )
         .then((res) => {
           if (!res.ok) {
@@ -52,9 +53,13 @@ export default (() => {
 
   function createLobby() {
     return new Promise((resolve, reject) => {
-      fetch(import.meta.env.VITE_API_URL + "/api/createlobby", {
-        method: "POST",
-      })
+      fetch(
+        (import.meta.env.RAILWAY_STATIC_URL || import.meta.env.VITE_API_URL) +
+          "/api/createlobby",
+        {
+          method: "POST",
+        }
+      )
         .then((res) => {
           if (!res.ok) {
             handlers.onError(
@@ -82,10 +87,14 @@ export default (() => {
      *  If in development mode, uses port 4000.
      *  If in a production build, this will default to using the same port as the server.
      */
-    socket = io(import.meta.env.VITE_API_URL + "/api/lobby", {
-      forceNew: false,
-      transports: ["websocket"],
-    });
+    socket = io(
+      (import.meta.env.RAILWAY_STATIC_URL || import.meta.env.VITE_API_URL) +
+        "/api/lobby",
+      {
+        forceNew: false,
+        transports: ["websocket"],
+      }
+    );
   }
 
   /**
