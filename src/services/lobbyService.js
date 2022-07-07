@@ -29,7 +29,7 @@ export default (() => {
   function checkIfLobbyExists(id) {
     return new Promise((resolve, reject) => {
       fetch(
-        (import.meta.env.RAILWAY_STATIC_URL || import.meta.env.VITE_API_URL) +
+        (process.env.RAILWAY_STATIC_URL || import.meta.env.VITE_API_URL) +
           `/api/lobbyinfo?id=${id.toUpperCase()}`
       )
         .then((res) => {
@@ -54,7 +54,7 @@ export default (() => {
   function createLobby() {
     return new Promise((resolve, reject) => {
       fetch(
-        (import.meta.env.RAILWAY_STATIC_URL || import.meta.env.VITE_API_URL) +
+        (process.env.RAILWAY_STATIC_URL || import.meta.env.VITE_API_URL) +
           "/api/createlobby",
         {
           method: "POST",
@@ -88,7 +88,7 @@ export default (() => {
      *  If in a production build, this will default to using the same port as the server.
      */
     socket = io(
-      (import.meta.env.RAILWAY_STATIC_URL || import.meta.env.VITE_API_URL) +
+      (process.env.RAILWAY_STATIC_URL || import.meta.env.VITE_API_URL) +
         "/api/lobby",
       {
         forceNew: false,
