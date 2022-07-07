@@ -5,7 +5,7 @@ import App from "./App/App";
 
 
 console.log("Running in " + process.env.NODE_ENV);
-console.log("IMPORT META ENV:" + import.meta.env);
+console.log("IMPORT META ENV:" + JSON.stringify(import.meta.env));
 
 ReactDOM.render(
   <React.StrictMode>
