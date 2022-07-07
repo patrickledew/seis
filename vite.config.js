@@ -6,6 +6,7 @@ export default ({ mode }) => {
     plugins: [react()],
     define: {
       "process.env.NODE_ENV": `"${mode}"`,
+      "process.env.RAILWAY_STATIC_URL": `"${process.env.RAILWAY_STATIC_URL}"`,
     },
   });
 };
