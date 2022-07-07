@@ -8,13 +8,16 @@ const Deck = (props) => {
   const [shouldBump, setShouldBump] = useState(true);
   const [cardSound] = useState(new Audio());
   const [cardPlaySound] = useState(new Audio());
+  const [cardErrSound] = useState(new Audio());
 
   useEffect(() => {
     cardSound.src = "/sounds/card3.mp3";
     cardSound.load();
     cardPlaySound.src = "/sounds/card2.mp3";
     cardPlaySound.load();
-  }, [cardSound, cardPlaySound]);
+    cardErrSound.src = "/sounds/error.mp3";
+    cardErrSound.load();
+  }, [cardSound, cardPlaySound, cardErrSound]);
 
   const cardMouseEnterFn = (cardIdx) => {
     const copy = cardSound.cloneNode(true);
@@ -28,14 +31,21 @@ const Deck = (props) => {
 
   const cardClickFn = (e) => {
     console.log("cardclick e: ", e);
-    const copy = cardPlaySound.cloneNode(true);
-    copy.mozPreservesPitch = false;
-    copy.playbackRate = Math.random() / 5 + 1;
-    copy.play();
 
-    if (!props.inactive && selectedCard != null) {
+    if (
+      !props.inactive &&
+      selectedCard != null &&
+      isValidCard(props.cards[selectedCard])
+    ) {
+      const copy = cardPlaySound.cloneNode(true);
+      copy.mozPreservesPitch = false;
+      copy.playbackRate = Math.random() / 5 + 1;
+      copy.play();
       props.playCard(selectedCard);
       setSelectedCard(null);
+    } else {
+      const copy = cardErrSound.cloneNode(true);
+      copy.play();
     }
   };
 
@@ -52,13 +62,30 @@ const Deck = (props) => {
     return cardOffset;
   };
 
+  const isValidCard = (card) => {
+    const lastCard = props.topCard;
+    if (lastCard === undefined) return false;
+    // TODO: Recognize when we are stacking, then only return true for +2/+4 cards
+    if (
+      lastCard.value === card.value || // Playing same value card
+      lastCard.color === card.color || // Playing same color card
+      card.color === null // Playing wildcard or +4
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <div className="mydeck">
       <div className="deck-margins">
         <div
-          className={`deck ${shouldBump ? "bump" : ""} ${
-            props.inactive ? "inactive" : ""
-          } ${props.highlight ? "highlight" : ""}`}
+          className={`deck ${shouldBump ? "bump" : ""}
+            ${props.inactive ? "inactive" : ""}
+            ${props.highlight ? "highlight" : ""}
+            ${props.drawing ? "drawing" : ""}
+            `}
         >
           {props.cards.map((card, i) => (
             <Card
@@ -70,18 +97,11 @@ const Deck = (props) => {
 
                 return style;
               })()}
-              position={
-                selectedCard !== null
-                  ? i < selectedCard
-                    ? "left"
-                    : i > selectedCard
-                    ? "right"
-                    : ""
-                  : "left"
-              }
               onMouseEnter={cardMouseEnterFn.bind(this, i)}
               selected={i === selectedCard}
               onClick={cardClickFn}
+              canPlay={isValidCard(card)}
+              topCard={i === props.cards.length - 1}
               key={i}
             ></Card>
           ))}
@@ -96,6 +116,8 @@ Deck.propTypes = {
   inactive: PropTypes.bool,
   highlight: PropTypes.bool,
   playCard: PropTypes.func,
+  drawing: PropTypes.bool,
+  topCard: PropTypes.object,
 };
 
 export default Deck;

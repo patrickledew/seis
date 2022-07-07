@@ -17,24 +17,28 @@ const Card = (props) => {
   return (
     <div
       id={props.idx !== undefined ? `card-${props.idx}` : null}
-      className={
-        "card " +
-        (props.color === "red"
-          ? "card-red"
-          : props.color === "blue"
-          ? "card-blue"
-          : props.color === "green"
-          ? "card-green"
-          : props.color === "yellow"
-          ? "card-yellow"
-          : "card-wildcard") +
-        " " +
-        (props.selected ? "selected" : "") +
-        " " +
-        (props.position ? props.position : "") +
-        " " +
-        (props.topCard ? "topcard" : "")
-      }
+      className={`card 
+        ${
+          props.color === "red"
+            ? "card-red"
+            : props.color === "blue"
+            ? "card-blue"
+            : props.color === "green"
+            ? "card-green"
+            : props.color === "yellow"
+            ? "card-yellow"
+            : "card-wildcard"
+        }
+        ${props.selected ? "selected" : ""}
+        ${props.topCard ? "topcard" : ""}
+        ${props.playedByOpponent ? "opponent" : ""}
+        ${
+          props.canPlay !== undefined
+            ? props.canPlay === true
+              ? ""
+              : "invalid"
+            : ""
+        }`}
       ref={animation.ref}
       style={props.cardStyle}
       onMouseEnter={props.onMouseEnter}
@@ -51,13 +55,14 @@ Card.propTypes = {
   idx: PropTypes.number,
   color: PropTypes.string,
   value: PropTypes.string,
+  canPlay: PropTypes.bool,
   selected: PropTypes.bool,
   topCard: PropTypes.bool,
-  position: PropTypes.oneOf(["left", "right", ""]),
   cardStyle: PropTypes.object,
   onMouseEnter: PropTypes.func,
   onClick: PropTypes.func,
   animateUnmount: PropTypes.bool,
+  playedByOpponent: PropTypes.bool,
 };
 
 export default Card;

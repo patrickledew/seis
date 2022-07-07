@@ -52,12 +52,9 @@
   color: #ffffff;
 }
 
-.inactive .card {
+.inactive .card,
+.card.invalid {
   filter: brightness(0.7) saturate(0.8);
-  cursor: default !important;
-}
-.card.inactive {
-  filter: brightness(0.5) saturate(0.5);
   cursor: default !important;
 }
 
@@ -65,33 +62,40 @@
   cursor: pointer;
 }
 
+/* Left of selected card */
+.deck > .card {
+  transform: translate(calc(-2em * var(--card-size-factor)), 1em) rotate(-2deg);
+}
+
+.deck.bump > .card {
+  transform: translate(calc(-3em * var(--card-size-factor)), 1em) rotate(-2deg);
+}
+
+/* Right of selected card */
+.deck > .card.selected ~ .card {
+  transform: translate(calc(6em * var(--card-size-factor)), 1em) rotate(2deg);
+}
+
+.deck.bump > .card.selected ~ .card {
+  transform: translate(calc(6.5em * var(--card-size-factor)), 1em) rotate(2deg);
+}
+
+/* Selected card */
+.card.selected {
+  transform: translate(0em, -8em) !important;
+}
+
 .card.selected {
   box-shadow: #ffffff 0px 0px 10px 2px;
-  transform: translate(0em, -8em);
 }
 
-.inactive .card.selected {
+.inactive .card.selected,
+.card.selected.invalid {
   box-shadow: none !important;
+  transform: translate(0em, -2em) !important;
 }
 
-.card.right {
-  transform: translate(calc(6em * var(--card-size-factor)), 1em);
-  rotate: 2deg;
-}
-
-.bump .card.right {
-  transform: translate(calc(6.5em * var(--card-size-factor)), 1em);
-}
-
-.card.left {
-  transform: translate(calc(-2em * var(--card-size-factor)), 1em);
-  rotate: -2deg;
-}
-
-.bump .card.left {
-  transform: translate(calc(-3em * var(--card-size-factor)), 1em);
-}
-
+/* Colors */
 .card-red {
   background: linear-gradient(to top right, #c7201d, #e35d5b);
 }

@@ -1,9 +1,11 @@
 .gameBar {
   height: auto;
   position: absolute;
+  width: 100% !important;
   top: 0;
   left: 0;
   background-color: #3c3c3c;
+  z-index: 40;
 }
 .backArrow {
   color: #e4e4e4;

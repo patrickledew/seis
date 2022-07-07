@@ -1,7 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap");
 
+html {
+  overflow: hidden;
+}
+
 #game {
   padding-top: 5em;
   background-color: #222222;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+}
+#game-alerts {
+  position: absolute;
+  right: 2em;
+  top: 2em;
 }

@@ -29,7 +29,7 @@ export default (() => {
   function checkIfLobbyExists(id) {
     return new Promise((resolve, reject) => {
       fetch(
-        process.env.REACT_APP_API_URL + `/api/lobbyinfo?id=${id.toUpperCase()}`
+        import.meta.env.VITE_API_URL + `/api/lobbyinfo?id=${id.toUpperCase()}`
       )
         .then((res) => {
           if (!res.ok) {
@@ -52,7 +52,7 @@ export default (() => {
 
   function createLobby() {
     return new Promise((resolve, reject) => {
-      fetch(process.env.REACT_APP_API_URL + "/api/createlobby", {
+      fetch(import.meta.env.VITE_API_URL + "/api/createlobby", {
         method: "POST",
       })
         .then((res) => {
@@ -82,7 +82,7 @@ export default (() => {
      *  If in development mode, uses port 4000.
      *  If in a production build, this will default to using the same port as the server.
      */
-    socket = io(process.env.REACT_APP_API_URL + "/api/lobby", {
+    socket = io(import.meta.env.VITE_API_URL + "/api/lobby", {
       forceNew: false,
       transports: ["websocket"],
     });
@@ -118,21 +118,21 @@ export default (() => {
       handlers.onError("You were kicked from the lobby.");
       handlers.onKicked();
     });
-    socket.on("gamestarting", () => {
+    socket.on("game-starting", () => {
       handlers.onGameStart();
     });
-    socket.on("gameending", () => {
+    socket.on("game-ending", () => {
       handlers.onGameEnd();
     });
   }
 
   function stopListeners() {
     if (socket) {
-      socket.off("error");
-      socket.off("update");
-      socket.off("kick");
-      socket.off("gamestarting");
-      socket.off("gameending");
+      socket.removeAllListeners("error");
+      socket.removeAllListeners("update");
+      socket.removeAllListeners("kick");
+      socket.removeAllListeners("gamestarting");
+      socket.removeAllListeners("gameending");
     }
   }
 
